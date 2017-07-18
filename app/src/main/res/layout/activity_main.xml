@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="luongvo.com.todolistminimal.MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/inbox"
+        android:scaleType="centerCrop"/>
+
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        app:pstsShouldExpand="true"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#757de8"
+        app:pstsTabTextColor="@android:color/white"
+        app:pstsIndicatorHeight="4dp"
+        app:pstsIndicatorColor="#3f51b5"/>
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/view_pager"
+        android:background="@android:color/white"/>
+
+
+</LinearLayout>
