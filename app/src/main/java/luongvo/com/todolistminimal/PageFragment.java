@@ -8,7 +8,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import luongvo.com.todolistminimal.Adapters.MyFragmentPagerAdapter;
+import luongvo.com.todolistminimal.Adapters.TodoListAdapter;
 
 
 /**
@@ -22,6 +30,10 @@ import android.widget.TextView;
 public class PageFragment extends Fragment {
 
     private int mPage;
+    @BindView(R.id.todoList) ListView todoList;
+    TodoListAdapter fragmentPagerAdapter;
+    private ArrayList<ToDoItem> toDoItems;
+
 
     private static final String ARG_PAGE = "ARG_PAGE";
 
@@ -37,15 +49,29 @@ public class PageFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
-        TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-        tvTitle.setText("Fragment #" + mPage);
+        ButterKnife.bind(this, view);
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        toDoItems = new ArrayList<>();
+        fragmentPagerAdapter = new TodoListAdapter(getActivity().getApplicationContext(), R.layout.todo_item, toDoItems);
+        toDoItems.add(new ToDoItem("Test", true));
+        toDoItems.add(new ToDoItem("Test", true));
+        toDoItems.add(new ToDoItem("Test", true));
+        toDoItems.add(new ToDoItem("Test", true));
+        toDoItems.add(new ToDoItem("Test", true));
+        toDoItems.add(new ToDoItem("Test", true));
+        toDoItems.add(new ToDoItem("Test", true));
+        todoList.setAdapter(fragmentPagerAdapter);
+    }
 }

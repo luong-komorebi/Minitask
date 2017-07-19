@@ -5,9 +5,11 @@
              tools:context="luongvo.com.todolistminimal.PageFragment">
 
 
-    <TextView
-        android:id="@+id/tvTitle"
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:id="@+id/todoList">
+
+    </ListView>
 
 </FrameLayout>
