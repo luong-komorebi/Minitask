@@ -3,17 +3,17 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
-    <android.support.v7.widget.AppCompatCheckBox
-        android:layout_width="0dp"
+    <CheckBox
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:buttonTint="#1a237e"
         android:id="@+id/checkDone"/>
     <TextView
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:textSize="30sp"
-        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:gravity="center_vertical"
+        android:textColor="#000051"
         android:maxLines="2"
         android:ellipsize="end"
         android:id="@+id/todoContent"/>
