@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
     private static class ViewHolder {
         TextView content;
         CheckBox checkDone;
+        ImageView clockReminder;
     }
 
     @NonNull
@@ -50,6 +52,7 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
             convertView = layoutInflater.inflate(resourceID, parent, false);
             viewHolder.checkDone = (CheckBox) convertView.findViewById(R.id.checkDone);
             viewHolder.content = (TextView) convertView.findViewById(R.id.todoContent);
+            viewHolder.clockReminder = (ImageView) convertView.findViewById(R.id.clockReminder);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -57,6 +60,7 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
 
         viewHolder.content.setText(toDoItem.getContent());
         viewHolder.checkDone.setChecked(toDoItem.getDone());
+        viewHolder.clockReminder.setVisibility(View.VISIBLE);
         return convertView;
     }
 }

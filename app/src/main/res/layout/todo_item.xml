@@ -2,20 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:buttonTint="#1a237e"
         android:id="@+id/checkDone"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_weight="8"
         android:textSize="14sp"
         android:gravity="center_vertical"
         android:textColor="#000051"
-        android:maxLines="2"
+        android:maxLines="1"
         android:ellipsize="end"
         android:id="@+id/todoContent"/>
-        
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/ic_alarm_on_black_18dp"
+        android:id="@+id/clockReminder"/>
 </LinearLayout>

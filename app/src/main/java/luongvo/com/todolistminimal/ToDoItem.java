@@ -1,5 +1,7 @@
 package luongvo.com.todolistminimal;
 
+import java.util.Date;
+
 /**
  * Created by luongvo on 19/07/2017.
  */
@@ -7,11 +9,14 @@ package luongvo.com.todolistminimal;
 public class ToDoItem {
     public String content;
     public Boolean done;
+    public String reminderDate;
 
-    public ToDoItem(String content, Boolean done) {
+    public ToDoItem(String content, Boolean done, String reminderDate) {
         this.content = content;
         this.done = done;
+        this.reminderDate = reminderDate;
     }
+
 
     public String getContent() {
         return content;

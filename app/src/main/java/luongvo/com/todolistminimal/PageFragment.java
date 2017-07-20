@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,13 +67,16 @@ public class PageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         toDoItems = new ArrayList<>();
         fragmentPagerAdapter = new TodoListAdapter(getActivity().getApplicationContext(), R.layout.todo_item, toDoItems);
-        toDoItems.add(new ToDoItem("Test", true));
-        toDoItems.add(new ToDoItem("Test", true));
-        toDoItems.add(new ToDoItem("Test", true));
-        toDoItems.add(new ToDoItem("Test", true));
-        toDoItems.add(new ToDoItem("Test", true));
-        toDoItems.add(new ToDoItem("Test", true));
-        toDoItems.add(new ToDoItem("Test", true));
+        Date now = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d-M-y");
+        dateFormat.format(now);
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
         todoList.setAdapter(fragmentPagerAdapter);
     }
 }
