@@ -1,0 +1,18 @@
+package luongvo.com.todolistminimal;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+public class AddTodoItem extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_todo_item);
+        initializeComponents();
+    }
+
+    private void initializeComponents() {
+        getSupportActionBar().setTitle(R.string.add_todo_item);
+    }
+}

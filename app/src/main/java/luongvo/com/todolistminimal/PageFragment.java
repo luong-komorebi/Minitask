@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.Adapters.MyFragmentPagerAdapter;
 import luongvo.com.todolistminimal.Adapters.TodoListAdapter;
+import luongvo.com.todolistminimal.Database.TodoListDbHelper;
 
 
 /**
@@ -51,7 +52,7 @@ public class PageFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
-
+        TodoListDbHelper mDbHelper = new TodoListDbHelper(getContext());
     }
 
     @Nullable

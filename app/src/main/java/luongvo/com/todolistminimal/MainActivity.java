@@ -1,9 +1,12 @@
 package luongvo.com.todolistminimal;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
@@ -19,13 +23,17 @@ import com.astuetz.PagerSlidingTabStrip;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import luongvo.com.todolistminimal.Adapters.MyFragmentPagerAdapter;
+import luongvo.com.todolistminimal.Database.TodoListDbHelper;
 
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.view_pager) ViewPager pager;
     @BindView(R.id.tabs) PagerSlidingTabStrip tabStrip;
     @BindView(R.id.descriptImage) ImageView descriptImage;
+    @BindView(R.id.actionButton) FloatingActionButton actionButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
@@ -78,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         window.setStatusBarColor(Color.parseColor(indicatorColor));
         tabStrip.setBackground(new ColorDrawable((Color.parseColor(tabStripColor))));
         tabStrip.setIndicatorColor(Color.parseColor(indicatorColor));
+        actionButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(actionBarColor)));
 
     }
 

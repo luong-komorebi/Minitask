@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.R;
 import luongvo.com.todolistminimal.ToDoItem;
 
@@ -35,10 +36,14 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
         this.resourceID = resource;
     }
 
-    private static class ViewHolder {
-        TextView content;
-        CheckBox checkDone;
-        ImageView clockReminder;
+    static class ViewHolder {
+        @BindView(R.id.todoContent) TextView content;
+        @BindView(R.id.checkDone) CheckBox checkDone;
+        @BindView(R.id.clockReminder) ImageView clockReminder;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 
     @NonNull
@@ -47,12 +52,9 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
         ToDoItem toDoItem = getItem(position);
         ViewHolder viewHolder;
         if (convertView == null) {
-            viewHolder = new ViewHolder();
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
             convertView = layoutInflater.inflate(resourceID, parent, false);
-            viewHolder.checkDone = (CheckBox) convertView.findViewById(R.id.checkDone);
-            viewHolder.content = (TextView) convertView.findViewById(R.id.todoContent);
-            viewHolder.clockReminder = (ImageView) convertView.findViewById(R.id.clockReminder);
+            viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
