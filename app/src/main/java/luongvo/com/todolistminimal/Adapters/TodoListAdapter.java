@@ -60,7 +60,10 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
 
         viewHolder.content.setText(toDoItem.getContent());
         viewHolder.checkDone.setChecked(toDoItem.getDone());
-        viewHolder.clockReminder.setVisibility(View.VISIBLE);
+        if (toDoItem.getHasReminder())
+            viewHolder.clockReminder.setVisibility(View.VISIBLE);
+        else
+            viewHolder.clockReminder.setVisibility(View.INVISIBLE);
         return convertView;
     }
 }

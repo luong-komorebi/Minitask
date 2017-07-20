@@ -7,16 +7,21 @@ import java.util.Date;
  */
 
 public class ToDoItem {
-    public String content;
-    public Boolean done;
-    public String reminderDate;
+    private String content;
+    private Boolean done;
+    private String reminderDate;
+    private Boolean hasReminder;
 
-    public ToDoItem(String content, Boolean done, String reminderDate) {
+    public ToDoItem(String content, Boolean done, String reminderDate, Boolean hasReminder) {
         this.content = content;
         this.done = done;
         this.reminderDate = reminderDate;
+        this.hasReminder = hasReminder;
     }
 
+    public Boolean getHasReminder() {
+        return hasReminder;
+    }
 
     public String getContent() {
         return content;

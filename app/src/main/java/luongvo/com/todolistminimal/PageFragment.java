@@ -70,13 +70,13 @@ public class PageFragment extends Fragment {
         Date now = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d-M-y");
         dateFormat.format(now);
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now)));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
+        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
         todoList.setAdapter(fragmentPagerAdapter);
     }
 }
