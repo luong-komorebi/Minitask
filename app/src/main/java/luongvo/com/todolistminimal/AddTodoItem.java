@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
@@ -56,9 +57,6 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
         dateTimeUtils = new MyDateTimeUtils();
         date ="";
         time ="";
-        // check if input is blank or not
-        materialTextInput.validateWith(new RegexpValidator("Only Integer Valid!", "^\\s*$"));
-        content = materialTextInput.getText().toString();
 
         reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -121,6 +119,11 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     }
 
     private void addItemToDatabase() {
+        if (!materialTextInput.validateWith(
+                new RegexpValidator("String must not be empty", "^(?!\\s*$).+"))) {
+            Toast.makeText(this, "Empty task detected! No task added!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         toDoItem = new ToDoItem(content, false, date + " " + time, reminderSwitch.isChecked());
     }
 

@@ -21,10 +21,11 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:background="#3f51b5"
+                android:focusableInTouchMode="true"
+                android:focusable="true"
                 android:id="@+id/todoInput">
 
                 <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/todoEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="start|bottom"
@@ -42,6 +43,9 @@
                     app:met_helperTextColor="#c62828"
                     app:met_singleLineEllipsis="true"
                     android:hint="@string/add_todo_item_hint"
+                    android:id="@+id/todoEditText"
+                    android:nextFocusUp="@id/todoEditText"
+                    android:nextFocusLeft="@id/todoEditText"
                     />
 
             </LinearLayout>

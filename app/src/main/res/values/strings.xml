@@ -6,7 +6,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_todo_item">Add task</string>
     <string name="add_todo_item_hint">Insert your task here</string>
-    <string name="empty_input">Task must not be empty!</string>
+    <string name="empty_input">Don\'t leave your task empty</string>
     <string name="reminder_or_not">Set a reminder for me</string>
     <string name="set_date">Set Date</string>
     <string name="set_time">Set Time</string>
