@@ -33,4 +33,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    compile 'com.wdullaer:materialdatetimepicker:3.2.2'
 }

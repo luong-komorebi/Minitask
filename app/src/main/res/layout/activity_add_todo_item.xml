@@ -24,12 +24,15 @@
                 android:id="@+id/todoInput">
 
                 <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/todoEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="start|bottom"
                     app:met_textColor="#ffffff"
                     app:met_baseColor="#efdcd5"
-                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabel="normal"
+                    app:met_hideUnderline="false"
+                    app:met_underlineColor="#ffff00"
                     app:met_floatingLabelTextColor="@android:color/white"
                     app:met_floatingLabelText="@string/add_todo_item"
                     app:met_clearButton="true"
@@ -73,7 +76,8 @@
                     <Switch
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"/>
+                        android:padding="10dp"
+                        android:id="@+id/reminderSwitch"/>
                     
                 </LinearLayout>
                 
@@ -84,6 +88,7 @@
                     android:gravity="center"
                     android:layout_weight="1">
                     <Button
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="#303f9f"
@@ -91,8 +96,10 @@
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_margin="10dp"
                         android:padding="10dp"
-                        android:text="@string/set_date"/>
+                        android:text="@string/set_date"
+                        android:id="@+id/buttonSetDate"/>
                     <Button
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="#303f9f"
@@ -100,7 +107,8 @@
                         android:textColor="#ffff00"
                         android:layout_margin="10dp"
                         android:padding="10dp"
-                        android:text="@string/set_time"/>
+                        android:text="@string/set_time"
+                        android:id="@+id/buttonSetTime"/>
                     
                 
                 </LinearLayout>
@@ -112,12 +120,14 @@
                     android:gravity="center"
                     android:layout_weight="2">
                     <TextView
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/reminder_set_at"
                         android:textStyle="italic"
                         android:textSize="18sp"
-                        style="@style/Base.TextAppearance.AppCompat.Body1"/>
+                        style="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:id="@+id/reminderText"/>
 
 
                 </LinearLayout>
@@ -129,9 +139,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="25dp"
-            android:src="@drawable/ic_done_white_24dp"
+            android:src="@drawable/ic_done_white_36dp"
             app:layout_anchor="@id/todoInput"
-            app:layout_anchorGravity="bottom|right|end" />
+            app:layout_anchorGravity="bottom|right|end"
+            android:id="@+id/addTodoBtn"/>
 
     </android.support.design.widget.CoordinatorLayout>
 
