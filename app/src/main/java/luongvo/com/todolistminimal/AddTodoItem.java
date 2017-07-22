@@ -1,6 +1,8 @@
 package luongvo.com.todolistminimal;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +27,8 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import luongvo.com.todolistminimal.Database.TodoListContract;
+import luongvo.com.todolistminimal.Database.TodoListDbHelper;
 import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
 
 public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -35,6 +39,8 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     @BindView(R.id.reminderSwitch) Switch reminderSwitch;
     @BindView(R.id.reminderText) TextView reminderText;
     @BindView(R.id.addTodoBtn) FloatingActionButton addTodoBtn;
+
+    TodoListDbHelper dbHelper;
 
     ToDoItem toDoItem;
     MyDateTimeUtils dateTimeUtils;
@@ -53,6 +59,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     private void initializeComponents() {
         getSupportActionBar().setTitle(R.string.add_todo_item);
         ButterKnife.bind(this);
+        dbHelper = new TodoListDbHelper(this);
 
         dateTimeUtils = new MyDateTimeUtils();
         date ="";
@@ -65,6 +72,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                     buttonSetDate.setVisibility(View.GONE);
                     buttonSetTime.setVisibility(View.GONE);
                     reminderText.setVisibility(View.GONE);
+                    reminderText.setText(getString(R.string.reminder_set_at));
                     date = "";
                     time = "";
                 }
@@ -124,7 +132,26 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
             Toast.makeText(this, "Empty task detected! No task added!", Toast.LENGTH_SHORT).show();
             return;
         }
-        toDoItem = new ToDoItem(content, false, date + " " + time, reminderSwitch.isChecked());
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String reminderDate = date + " " + time;
+        content = materialTextInput.getText().toString();
+
+        if (reminderDate.equals(" ")) {
+            toDoItem = new ToDoItem(content, false, null, false);
+            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, toDoItem.getContent());
+            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, toDoItem.getDone());
+            values.putNull(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE);
+        }
+        else {
+            toDoItem = new ToDoItem(content, false, reminderDate, true);
+            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, toDoItem.getContent());
+            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, toDoItem.getDone());
+            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE, toDoItem.getReminderDate());
+        }
+        long newRowId = db.insert(TodoListContract.TodoListEntries.TABLE_NAME, null, values);
+        Log.d("Item :", toDoItem.toString());
     }
 
 

@@ -38,4 +38,22 @@ public class ToDoItem {
     public void setDone(Boolean done) {
         this.done = done;
     }
+
+    public String getReminderDate() {
+        return reminderDate;
+    }
+
+    public void setReminderDate(String reminderDate) {
+        this.reminderDate = reminderDate;
+    }
+
+    @Override
+    public String toString() {
+        return "ToDoItem{" +
+                "content='" + content + '\'' +
+                ", done=" + done +
+                ", reminderDate='" + reminderDate + '\'' +
+                ", hasReminder=" + hasReminder +
+                '}';
+    }
 }
