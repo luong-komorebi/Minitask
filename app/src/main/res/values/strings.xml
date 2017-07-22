@@ -10,5 +10,5 @@
     <string name="reminder_or_not">Set a reminder for me</string>
     <string name="set_date">Set Date</string>
     <string name="set_time">Set Time</string>
-    <string name="reminder_set_at">Reminder set at .....</string>
+    <string name="reminder_set_at">Reminder set at</string>
 </resources>
