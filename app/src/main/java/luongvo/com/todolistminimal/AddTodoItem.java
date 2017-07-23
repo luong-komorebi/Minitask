@@ -141,12 +141,14 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
 
         if (reminderDate.equals(" ")) {
             toDoItem = new ToDoItem(content, false, null, false);
+            PageFragment.toDoItems.add(toDoItem);
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, toDoItem.getContent());
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, toDoItem.getDone());
             values.putNull(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE);
         }
         else {
             toDoItem = new ToDoItem(content, false, reminderDate, true);
+            PageFragment.toDoItems.add(toDoItem);
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, toDoItem.getContent());
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, toDoItem.getDone());
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE, toDoItem.getReminderDate());

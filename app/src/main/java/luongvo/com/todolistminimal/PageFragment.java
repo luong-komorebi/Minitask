@@ -39,9 +39,8 @@ public class PageFragment extends Fragment {
     private int mPage;
     @BindView(R.id.todoList) ListView todoList;
     TodoListAdapter fragmentPagerAdapter;
-    private ArrayList<ToDoItem> toDoItems;
+    public static ArrayList<ToDoItem> toDoItems;
     TodoListDbHelper mDbHelper;
-
 
     private static final String ARG_PAGE = "ARG_PAGE";
 
@@ -105,16 +104,12 @@ public class PageFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fragmentPagerAdapter = new TodoListAdapter(getActivity().getApplicationContext(), R.layout.todo_item, toDoItems);
-//        Date now = new Date();
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d-M-y");
-//        dateFormat.format(now);
-//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
-//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
-//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
-//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
-//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
-//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
-//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
         todoList.setAdapter(fragmentPagerAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fragmentPagerAdapter.notifyDataSetChanged();
     }
 }
