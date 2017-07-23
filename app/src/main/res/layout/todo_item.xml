@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:buttonTint="#1a237e"
-        android:id="@+id/checkDone"/>
+        android:id="@+id/checkDone"
+        android:focusable="false"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"

@@ -14,13 +14,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="4"
+                android:layout_weight="4.5"
                 android:gravity="center"
-                android:background="#3f51b5">
+                android:background="#3f51b5"
+                android:id="@+id/todoDetailLayout">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -34,6 +36,7 @@
                     android:ellipsize="end"
                     android:text="SampleText"
                     android:maxLines="5"
+                    style="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@android:color/white"
                     android:id="@+id/todoInfo"
                     />
@@ -52,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="start"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -64,11 +67,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="20dp"
+                        android:padding="16dp"
                         android:text="@string/reminder_info"
                         android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:textSize="18sp"/>
 
                 </LinearLayout>
 
@@ -79,12 +81,11 @@
                     android:gravity="center"
                     android:layout_weight="1">
                     <TextView
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reminder_set_at"
                         android:textStyle="italic"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
+                        android:textColor="#ffff00"
                         style="@style/Base.TextAppearance.AppCompat.Body1"
                         android:id="@+id/reminderInfo"/>
 
@@ -99,9 +100,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="25dp"
             android:src="@drawable/ic_mode_edit_white_24dp"
-            app:layout_anchor="@id/todoInput"
+            app:layout_anchor="@id/todoDetailLayout"
             app:layout_anchorGravity="bottom|right|end"
-            android:id="@+id/editBtn"/>
+            android:id="@+id/editTodoBtn"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

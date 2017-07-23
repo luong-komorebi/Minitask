@@ -1,6 +1,7 @@
 package luongvo.com.todolistminimal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,8 +38,8 @@ import luongvo.com.todolistminimal.Database.TodoListDbHelper;
  */
 public class PageFragment extends Fragment {
 
-    private int mPage;
     @BindView(R.id.todoList) ListView todoList;
+
     TodoListAdapter fragmentPagerAdapter;
     public static ArrayList<ToDoItem> toDoItems;
 
@@ -54,7 +56,7 @@ public class PageFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
+//        mPage = getArguments().getInt(ARG_PAGE);
     }
 
 
@@ -71,6 +73,17 @@ public class PageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         fragmentPagerAdapter = new TodoListAdapter(getActivity().getApplicationContext(), R.layout.todo_item, toDoItems);
         todoList.setAdapter(fragmentPagerAdapter);
+        todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), DetailTodoItem.class);
+                ToDoItem item = toDoItems.get(position);
+                intent.putExtra("content", item.getContent());
+                intent.putExtra("reminder", item.getReminderDate());
+                intent.putExtra("hasReminder", item.getHasReminder());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
