@@ -1,10 +1,13 @@
 package luongvo.com.todolistminimal;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.Adapters.MyFragmentPagerAdapter;
 import luongvo.com.todolistminimal.Adapters.TodoListAdapter;
+import luongvo.com.todolistminimal.Database.TodoListContract;
 import luongvo.com.todolistminimal.Database.TodoListDbHelper;
 
 
@@ -36,6 +40,7 @@ public class PageFragment extends Fragment {
     @BindView(R.id.todoList) ListView todoList;
     TodoListAdapter fragmentPagerAdapter;
     private ArrayList<ToDoItem> toDoItems;
+    TodoListDbHelper mDbHelper;
 
 
     private static final String ARG_PAGE = "ARG_PAGE";
@@ -52,7 +57,40 @@ public class PageFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
-        TodoListDbHelper mDbHelper = new TodoListDbHelper(getContext());
+        openAndQueryDb();
+    }
+
+    private void openAndQueryDb() {
+        toDoItems = new ArrayList<>();
+        mDbHelper = new TodoListDbHelper(getContext());
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "Select "
+                + TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + ", "
+                + TodoListContract.TodoListEntries.COLUMN_NAME_DONE + ", "
+                + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
+                + " FROM "
+                + TodoListContract.TodoListEntries.TABLE_NAME
+                , null);
+        if (cursor.moveToFirst()) {
+            do {
+                String content = cursor.getString(cursor.getColumnIndex(
+                        TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT
+                ));
+                int doneInt = cursor.getInt(cursor.getColumnIndex(
+                        TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT
+                ));
+                String reminderDate = cursor.getString(cursor.getColumnIndex(
+                        TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
+                ));
+                Boolean done = (doneInt == 1);
+                if (content == null && reminderDate == null) break;
+                if (reminderDate == null)
+                    toDoItems.add(new ToDoItem(content, done, " ", false));
+                else toDoItems.add(new ToDoItem(content, done, reminderDate, true));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
     }
 
     @Nullable
@@ -66,18 +104,17 @@ public class PageFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        toDoItems = new ArrayList<>();
         fragmentPagerAdapter = new TodoListAdapter(getActivity().getApplicationContext(), R.layout.todo_item, toDoItems);
-        Date now = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d-M-y");
-        dateFormat.format(now);
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
-        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
+//        Date now = new Date();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d-M-y");
+//        dateFormat.format(now);
+//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
+//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
+//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
+//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), true));
+//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
+//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
+//        toDoItems.add(new ToDoItem("Test", true, dateFormat.format(now), false));
         todoList.setAdapter(fragmentPagerAdapter);
     }
 }

@@ -121,6 +121,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
             @Override
             public void onClick(View v) {
                 addItemToDatabase();
+                finish();
             }
         });
 

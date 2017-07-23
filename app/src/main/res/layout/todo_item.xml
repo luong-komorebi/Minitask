@@ -24,6 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:visibility="gone"
         android:src="@drawable/ic_alarm_on_black_18dp"
         android:id="@+id/clockReminder"/>
 </LinearLayout>
