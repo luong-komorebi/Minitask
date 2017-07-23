@@ -40,7 +40,6 @@ public class PageFragment extends Fragment {
     @BindView(R.id.todoList) ListView todoList;
     TodoListAdapter fragmentPagerAdapter;
     public static ArrayList<ToDoItem> toDoItems;
-    TodoListDbHelper mDbHelper;
 
     private static final String ARG_PAGE = "ARG_PAGE";
 
@@ -56,41 +55,8 @@ public class PageFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
-        openAndQueryDb();
     }
 
-    private void openAndQueryDb() {
-        toDoItems = new ArrayList<>();
-        mDbHelper = new TodoListDbHelper(getContext());
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery(
-                "Select "
-                + TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + ", "
-                + TodoListContract.TodoListEntries.COLUMN_NAME_DONE + ", "
-                + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
-                + " FROM "
-                + TodoListContract.TodoListEntries.TABLE_NAME
-                , null);
-        if (cursor.moveToFirst()) {
-            do {
-                String content = cursor.getString(cursor.getColumnIndex(
-                        TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT
-                ));
-                int doneInt = cursor.getInt(cursor.getColumnIndex(
-                        TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT
-                ));
-                String reminderDate = cursor.getString(cursor.getColumnIndex(
-                        TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
-                ));
-                Boolean done = (doneInt == 1);
-                if (content == null && reminderDate == null) break;
-                if (reminderDate == null)
-                    toDoItems.add(new ToDoItem(content, done, " ", false));
-                else toDoItems.add(new ToDoItem(content, done, reminderDate, true));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-    }
 
     @Nullable
     @Override
