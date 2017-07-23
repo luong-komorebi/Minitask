@@ -11,4 +11,6 @@
     <string name="set_date">Set Date</string>
     <string name="set_time">Set Time</string>
     <string name="reminder_set_at">Reminder set at</string>
+    <string name="reminder_info">Info about reminder</string>
+    <string name="not_found">Not found!</string>
 </resources>

@@ -18,11 +18,21 @@
         </activity>
         <activity
             android:name=".AddTodoItem"
-            android:parentActivityName="luongvo.com.todolistminimal.MainActivity" >
+            android:parentActivityName=".MainActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="luongvo.com.todolistminimal.MainActivity" />
+                android:value="luongvo.com.todolistminimal.MainActivity"/>
+        </activity>
+        <activity
+            android:name=".DetailTodoItem"
+            android:parentActivityName=".MainActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="luongvo.com.todolistminimal.MainActivity"/>
         </activity>
     </application>
 
