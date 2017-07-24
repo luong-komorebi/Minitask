@@ -5,11 +5,13 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.R;
 import luongvo.com.todolistminimal.ToDoItem;
+import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 
 /**
  * Created by luongvo on 19/07/2017.
@@ -29,6 +32,7 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
 
     private Context context;
     private int resourceID;
+    UpdateDatabase updateUtil = new UpdateDatabase();
 
     public TodoListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<ToDoItem> objects) {
         super(context, resource, objects);
@@ -49,8 +53,8 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        ToDoItem toDoItem = getItem(position);
-        ViewHolder viewHolder;
+        final ToDoItem toDoItem = getItem(position);
+        final ViewHolder viewHolder;
         if (convertView == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
             convertView = layoutInflater.inflate(resourceID, parent, false);
@@ -66,6 +70,24 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
             viewHolder.clockReminder.setVisibility(View.VISIBLE);
         else
             viewHolder.clockReminder.setVisibility(View.INVISIBLE);
+        viewHolder.checkDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("Before : ", "" + toDoItem.getDone());
+                if (isChecked) {
+                    toDoItem.setDone(true);
+                    updateUtil.updateDoneInDatabase(toDoItem.getContent(), toDoItem.getReminderDate(),
+                            toDoItem.getDone(), context);
+                    Log.d("After ischecked : ", "" + toDoItem.getDone());
+                }
+                else {
+                    toDoItem.setDone(false);
+                    updateUtil.updateDoneInDatabase(toDoItem.getContent(), toDoItem.getReminderDate(),
+                            toDoItem.getDone(), context);
+                    Log.d("After isnotchecked : ", "" + toDoItem.getDone());
+                }
+            }
+        });
         return convertView;
     }
 }

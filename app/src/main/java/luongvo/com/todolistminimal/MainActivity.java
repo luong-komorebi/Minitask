@@ -110,43 +110,40 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         cursor = db.rawQuery(
                                 "Select "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + ", "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_DONE + ", "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
-                                        + " FROM "
-                                        + TodoListContract.TodoListEntries.TABLE_NAME
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + ", "
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_DONE + ", "
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
+                                + " FROM "
+                                + TodoListContract.TodoListEntries.TABLE_NAME
                                 , null);
-                        Log.d("This is ", "0");
                         break;
                     case 1:
                         cursor = db.rawQuery(
                                 "Select "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + ", "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_DONE + ", "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
-                                        + " FROM "
-                                        + TodoListContract.TodoListEntries.TABLE_NAME
-                                        + " WHERE "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
-                                        + " BETWEEN "
-                                        + " date('now') AND date('now', '+1 day') "
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + ", "
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_DONE + ", "
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
+                                + " FROM "
+                                + TodoListContract.TodoListEntries.TABLE_NAME
+                                + " WHERE "
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
+                                + " BETWEEN "
+                                + " date('now') AND date('now', '+1 day') "
                                 , null);
-                        Log.d("This is ", "1");
                         break;
                     case 2:
                         cursor = db.rawQuery(
                                 "Select "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + ", "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_DONE + ", "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
-                                        + " FROM "
-                                        + TodoListContract.TodoListEntries.TABLE_NAME
-                                        + " WHERE "
-                                        + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
-                                        + " BETWEEN "
-                                        + " date('now') AND date('now', '+7 day') "
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + ", "
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_DONE + ", "
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
+                                + " FROM "
+                                + TodoListContract.TodoListEntries.TABLE_NAME
+                                + " WHERE "
+                                + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
+                                + " BETWEEN "
+                                + " date('now') AND date('now', '+7 day') "
                                 , null);
-                        Log.d("This is ", "2");
                         break;
                     default:
                         cursor = null;
@@ -159,8 +156,9 @@ public class MainActivity extends AppCompatActivity {
                                 TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT
                         ));
                         int doneInt = cursor.getInt(cursor.getColumnIndex(
-                                TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT
+                                TodoListContract.TodoListEntries.COLUMN_NAME_DONE
                         ));
+                        Log.d("doneInt : ", "" + doneInt);
                         String reminderDate = cursor.getString(cursor.getColumnIndex(
                                 TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
                         ));
