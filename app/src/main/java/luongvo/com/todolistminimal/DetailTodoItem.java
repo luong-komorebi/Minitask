@@ -1,5 +1,6 @@
 package luongvo.com.todolistminimal;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -49,7 +50,10 @@ public class DetailTodoItem extends AppCompatActivity {
         editTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), AddTodoItem.class);
+                Intent intent = new Intent(DetailTodoItem.this, AddTodoItem.class);
+                intent.putExtra("content", content);
+                intent.putExtra("reminder", reminder);
+                finish();
                 startActivity(intent);
             }
         });

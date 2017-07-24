@@ -67,6 +67,9 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
 
         viewHolder.content.setText(toDoItem.getContent());
         viewHolder.checkDone.setChecked(toDoItem.getDone());
+        if (viewHolder.checkDone.isChecked())
+            viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        else viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
         if (toDoItem.getHasReminder())
             viewHolder.clockReminder.setVisibility(View.VISIBLE);
         else
@@ -80,14 +83,12 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
                     updateUtil.updateDoneInDatabase(toDoItem.getContent(), toDoItem.getReminderDate(),
                             toDoItem.getDone(), context);
                     viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    Log.d("After ischecked : ", "" + toDoItem.getDone());
                 }
                 else {
                     toDoItem.setDone(false);
                     updateUtil.updateDoneInDatabase(toDoItem.getContent(), toDoItem.getReminderDate(),
                             toDoItem.getDone(), context);
                     viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-                    Log.d("After isnotchecked : ", "" + toDoItem.getDone());
                 }
             }
         });

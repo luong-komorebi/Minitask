@@ -2,6 +2,7 @@ package luongvo.com.todolistminimal;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
@@ -30,6 +31,7 @@ import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.Database.TodoListContract;
 import luongvo.com.todolistminimal.Database.TodoListDbHelper;
 import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
+import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 
 public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -48,6 +50,8 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     String content;
     String date;
     String time;
+    String oldContent;
+    String oldReminder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +63,14 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     private void initializeComponents() {
         getSupportActionBar().setTitle(R.string.add_todo_item);
         ButterKnife.bind(this);
+
         dbHelper = new TodoListDbHelper(this);
 
         dateTimeUtils = new MyDateTimeUtils();
         date ="";
         time ="";
+
+        final Boolean existingData = loadDataIfExist();
 
         reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -120,11 +127,35 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
         addTodoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (existingData) {
+                    UpdateDatabase updateDatabaseInstance = new UpdateDatabase();
+                    updateDatabaseInstance.removeInDatabase(oldContent, oldReminder, AddTodoItem.this);
+                    Log.d("Item delete: ", oldContent + " " + oldReminder);
+                }
                 addItemToDatabase();
                 finish();
             }
         });
 
+    }
+
+    private Boolean loadDataIfExist() {
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras == null) return false;
+        oldContent = extras.getString("content");
+        oldReminder = extras.getString("reminder");
+        materialTextInput.setText(oldContent);
+        if (oldReminder.equals(" "))
+            return true;
+        date = oldReminder.split("\\s+")[0];
+        time = oldReminder.split("\\s+")[1];
+        reminderText.setText(getString(R.string.reminder_set_at) + " " + date + " " + time);
+        reminderSwitch.setChecked(true);
+        buttonSetDate.setVisibility(View.VISIBLE);
+        buttonSetTime.setVisibility(View.VISIBLE);
+        reminderText.setVisibility(View.VISIBLE);
+        return true;
     }
 
     private void addItemToDatabase() {
