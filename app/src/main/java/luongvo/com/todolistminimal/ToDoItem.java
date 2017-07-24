@@ -56,4 +56,24 @@ public class ToDoItem {
                 ", hasReminder=" + hasReminder +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ToDoItem other = (ToDoItem) obj;
+        if (!content.equals(other.content))
+            return false;
+        if (!reminderDate.equals(other.reminderDate))
+            return false;
+        if (hasReminder != other.hasReminder)
+            return false;
+        if (done != other.done)
+            return false;
+        return true;
+    }
 }

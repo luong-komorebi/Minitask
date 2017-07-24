@@ -81,6 +81,7 @@ public class PageFragment extends Fragment {
                 intent.putExtra("content", item.getContent());
                 intent.putExtra("reminder", item.getReminderDate());
                 intent.putExtra("hasReminder", item.getHasReminder());
+                intent.putExtra("done", item.getDone());
                 startActivity(intent);
             }
         });

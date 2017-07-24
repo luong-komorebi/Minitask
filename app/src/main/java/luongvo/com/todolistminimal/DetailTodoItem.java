@@ -20,6 +20,7 @@ public class DetailTodoItem extends AppCompatActivity {
     String content;
     String reminder;
     Boolean hasReminder;
+    Boolean done;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class DetailTodoItem extends AppCompatActivity {
         content = intent.getStringExtra("content");
         reminder = intent.getStringExtra("reminder");
         hasReminder = intent.getExtras().getBoolean("hasReminder");
+        done = intent.getExtras().getBoolean("done");
     }
 
 
@@ -53,6 +55,8 @@ public class DetailTodoItem extends AppCompatActivity {
                 Intent intent = new Intent(DetailTodoItem.this, AddTodoItem.class);
                 intent.putExtra("content", content);
                 intent.putExtra("reminder", reminder);
+                intent.putExtra("hasReminder", hasReminder);
+                intent.putExtra("done", done);
                 finish();
                 startActivity(intent);
             }

@@ -25,6 +25,8 @@ import luongvo.com.todolistminimal.R;
 import luongvo.com.todolistminimal.ToDoItem;
 import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 
+import static luongvo.com.todolistminimal.PageFragment.toDoItems;
+
 /**
  * Created by luongvo on 19/07/2017.
  */

@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.descriptImage) ImageView descriptImage;
     @BindView(R.id.actionButton) FloatingActionButton actionButton;
 
-    ProgressDialog progressDialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                toDoItems = new ArrayList<>();
             }
 
             @Override
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
-                toDoItems =new ArrayList<>();
                 TodoListDbHelper mDbHelper = new TodoListDbHelper(MainActivity.this);
                 SQLiteDatabase db = mDbHelper.getReadableDatabase();
                 Cursor cursor;

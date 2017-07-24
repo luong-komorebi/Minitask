@@ -17,6 +17,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.internal.util.Predicate;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -32,6 +33,8 @@ import luongvo.com.todolistminimal.Database.TodoListContract;
 import luongvo.com.todolistminimal.Database.TodoListDbHelper;
 import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
 import luongvo.com.todolistminimal.Utils.UpdateDatabase;
+
+import static luongvo.com.todolistminimal.PageFragment.toDoItems;
 
 public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -52,6 +55,8 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     String time;
     String oldContent = "";
     String oldReminder = "";
+    Boolean oldHasReminder;
+    Boolean oldDone;
     Boolean existingData;
 
     @Override
@@ -136,6 +141,8 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                 if (existingData) {
                     UpdateDatabase updateDatabaseInstance = new UpdateDatabase();
                     updateDatabaseInstance.removeInDatabase(oldContent, oldReminder, AddTodoItem.this);
+                    toDoItem = new ToDoItem(oldContent, oldDone, oldReminder, oldHasReminder);
+                    toDoItems.remove(toDoItem);
                     Log.d("Item delete: ", oldContent + " " + oldReminder);
                 }
                 finish();
@@ -150,6 +157,9 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
         if (extras == null) return false;
         oldContent = extras.getString("content");
         oldReminder = extras.getString("reminder");
+        oldHasReminder = extras.getBoolean("hasReminder");
+        oldDone = extras.getBoolean("done");
+
         materialTextInput.setText(oldContent);
         if (oldReminder.equals(" "))
             return true;
@@ -175,15 +185,15 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
         String reminderDate = date + " " + time;
 
         if (reminderDate.equals(" ")) {
-            toDoItem = new ToDoItem(content, false, null, false);
-            PageFragment.toDoItems.add(toDoItem);
+            toDoItem = new ToDoItem(content, false, " ", false);
+            toDoItems.add(toDoItem);
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, toDoItem.getContent());
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, toDoItem.getDone());
             values.putNull(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE);
         }
         else {
             toDoItem = new ToDoItem(content, false, reminderDate, true);
-            PageFragment.toDoItems.add(toDoItem);
+            toDoItems.add(toDoItem);
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, toDoItem.getContent());
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, toDoItem.getDone());
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE, toDoItem.getReminderDate());
