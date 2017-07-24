@@ -50,14 +50,16 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     String content;
     String date;
     String time;
-    String oldContent;
-    String oldReminder;
+    String oldContent = "";
+    String oldReminder = "";
+    Boolean existingData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_todo_item);
         initializeComponents();
+        existingData = loadDataIfExist();
     }
 
     private void initializeComponents() {
@@ -69,8 +71,6 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
         dateTimeUtils = new MyDateTimeUtils();
         date ="";
         time ="";
-
-        final Boolean existingData = loadDataIfExist();
 
         reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -127,12 +127,17 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
         addTodoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                content = materialTextInput.getText().toString();
+                if ((oldContent.equals(content) || content == null) && oldReminder.equals(date + " " + time)){
+                    Toast.makeText(AddTodoItem.this, "You made no change at all !?\n Press back to go back", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                addItemToDatabase();
                 if (existingData) {
                     UpdateDatabase updateDatabaseInstance = new UpdateDatabase();
                     updateDatabaseInstance.removeInDatabase(oldContent, oldReminder, AddTodoItem.this);
                     Log.d("Item delete: ", oldContent + " " + oldReminder);
                 }
-                addItemToDatabase();
                 finish();
             }
         });
@@ -168,7 +173,6 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         String reminderDate = date + " " + time;
-        content = materialTextInput.getText().toString();
 
         if (reminderDate.equals(" ")) {
             toDoItem = new ToDoItem(content, false, null, false);
