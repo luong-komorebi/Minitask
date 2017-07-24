@@ -1,6 +1,7 @@
 package luongvo.com.todolistminimal.Adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -78,12 +79,14 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
                     toDoItem.setDone(true);
                     updateUtil.updateDoneInDatabase(toDoItem.getContent(), toDoItem.getReminderDate(),
                             toDoItem.getDone(), context);
+                    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     Log.d("After ischecked : ", "" + toDoItem.getDone());
                 }
                 else {
                     toDoItem.setDone(false);
                     updateUtil.updateDoneInDatabase(toDoItem.getContent(), toDoItem.getReminderDate(),
                             toDoItem.getDone(), context);
+                    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
                     Log.d("After isnotchecked : ", "" + toDoItem.getDone());
                 }
             }
