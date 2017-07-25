@@ -54,8 +54,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="start"
+                    android:layout_weight="2"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -103,6 +104,15 @@
             app:layout_anchor="@id/todoDetailLayout"
             app:layout_anchorGravity="bottom|right|end"
             android:id="@+id/editTodoBtn"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:src="@drawable/ic_delete_sweep_white_24dp"
+            app:layout_anchor="@id/todoDetailLayout"
+            app:layout_anchorGravity="bottom|left|start"
+            android:id="@+id/deleteTodoBtn"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

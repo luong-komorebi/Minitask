@@ -7,20 +7,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import luongvo.com.todolistminimal.Utils.UpdateDatabase;
+
+import static luongvo.com.todolistminimal.PageFragment.toDoItems;
 
 public class DetailTodoItem extends AppCompatActivity {
 
     @BindView(R.id.todoInfo) TextView todoInfo;
     @BindView(R.id.reminderInfo) TextView reminderInfo;
     @BindView(R.id.editTodoBtn) FloatingActionButton editTodo;
+    @BindView(R.id.deleteTodoBtn) FloatingActionButton deleteTodo;
 
     String content;
     String reminder;
     Boolean hasReminder;
     Boolean done;
+    UpdateDatabase updateDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,7 @@ public class DetailTodoItem extends AppCompatActivity {
 
     private void initComponents() {
         ButterKnife.bind(this);
+        updateDatabase = new UpdateDatabase();
     }
 
     private void getDataFromIntent() {
@@ -59,6 +66,17 @@ public class DetailTodoItem extends AppCompatActivity {
                 intent.putExtra("done", done);
                 finish();
                 startActivity(intent);
+            }
+        });
+
+        deleteTodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DetailTodoItem.this, getString(R.string.item_deleted), Toast.LENGTH_SHORT).show();
+                ToDoItem toDoItem = new ToDoItem(content, done, reminder, hasReminder);
+                toDoItems.remove(toDoItem);
+                updateDatabase.removeInDatabase(content, reminder, DetailTodoItem.this);
+                finish();
             }
         });
     }
