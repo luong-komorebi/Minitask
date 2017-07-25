@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,7 +17,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.ViewSwitcher;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -36,8 +39,10 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.view_pager) ViewPager pager;
     @BindView(R.id.tabs) PagerSlidingTabStrip tabStrip;
-    @BindView(R.id.descriptImage) ImageView descriptImage;
+    @BindView(R.id.descriptImage) ImageSwitcher descriptImage;
     @BindView(R.id.actionButton) FloatingActionButton actionButton;
+
+    private static final int[] IMAGES = {R.drawable.inbox, R.drawable.today, R.drawable.seven_day};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                changeCoverPhoto(position);
+                descriptImage.setImageResource(IMAGES[position]);
                 changeColor(position);
                 openAndQueryDb(position);
             }
@@ -75,25 +80,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
 
-    private void changeCoverPhoto(int position) {
-        switch (position) {
-            case 0:
-                ((BitmapDrawable)descriptImage.getDrawable()).getBitmap().recycle();
-                descriptImage.setImageResource(R.drawable.inbox);
-                break;
-            case 1:
-                ((BitmapDrawable)descriptImage.getDrawable()).getBitmap().recycle();
-                descriptImage.setImageResource(R.drawable.today);
-                break;
-            case 2:
-                ((BitmapDrawable)descriptImage.getDrawable()).getBitmap().recycle();
-                descriptImage.setImageResource(R.drawable.seven_day);
-                break;
-            default:
-                break;
-        }
+        descriptImage.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                ImageView imgview = new ImageView(getApplicationContext());
+                imgview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                return imgview;
+            }
+        });
+        Animation in = AnimationUtils.loadAnimation(this,android.R.anim.slide_in_left);
+        Animation out = AnimationUtils.loadAnimation(this,android.R.anim.slide_out_right);
+        descriptImage.setInAnimation(in);
+        descriptImage.setOutAnimation(out);
+        descriptImage.setImageResource(IMAGES[0]);
     }
 
     private void openAndQueryDb(final int mPage) {
