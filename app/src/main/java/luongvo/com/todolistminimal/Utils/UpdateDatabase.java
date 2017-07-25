@@ -4,16 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.util.Log;
-
-import java.util.ArrayList;
 
 import luongvo.com.todolistminimal.Database.TodoListContract;
 import luongvo.com.todolistminimal.Database.TodoListDbHelper;
-import luongvo.com.todolistminimal.MainActivity;
-import luongvo.com.todolistminimal.ToDoItem;
-
-import static luongvo.com.todolistminimal.PageFragment.toDoItems;
 
 /**
  * Created by luongvo on 24/07/2017.

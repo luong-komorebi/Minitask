@@ -1,30 +1,23 @@
 package luongvo.com.todolistminimal;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -32,9 +25,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import luongvo.com.todolistminimal.Adapters.MyFragmentPagerAdapter;
-import luongvo.com.todolistminimal.Adapters.TodoListAdapter;
 import luongvo.com.todolistminimal.Database.TodoListContract;
 import luongvo.com.todolistminimal.Database.TodoListDbHelper;
 
@@ -156,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
                         int doneInt = cursor.getInt(cursor.getColumnIndex(
                                 TodoListContract.TodoListEntries.COLUMN_NAME_DONE
                         ));
-                        Log.d("doneInt : ", "" + doneInt);
                         String reminderDate = cursor.getString(cursor.getColumnIndex(
                                 TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
                         ));
@@ -185,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 applyNewColor("#4b2c20", "#a98274", "#795548");
                 break;
             default:
-                Log.d("shit", "Not found");
+                break;
         }
     }
 

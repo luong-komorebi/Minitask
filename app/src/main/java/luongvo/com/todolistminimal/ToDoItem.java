@@ -1,7 +1,5 @@
 package luongvo.com.todolistminimal;
 
-import java.util.Date;
-
 /**
  * Created by luongvo on 19/07/2017.
  */
