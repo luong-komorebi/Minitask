@@ -37,7 +37,6 @@ public class UpdateDatabase {
 
             @Override
             protected Void doInBackground(Void... params) {
-                toDoItems =new ArrayList<>();
                 TodoListDbHelper mDbHelper = new TodoListDbHelper(context);
                 SQLiteDatabase db = mDbHelper.getWritableDatabase();
                 Cursor cursor;
