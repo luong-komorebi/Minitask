@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                changeCoverPhoto(position);
                 changeColor(position);
                 openAndQueryDb(position);
             }
@@ -73,6 +75,25 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void changeCoverPhoto(int position) {
+        switch (position) {
+            case 0:
+                ((BitmapDrawable)descriptImage.getDrawable()).getBitmap().recycle();
+                descriptImage.setImageResource(R.drawable.inbox);
+                break;
+            case 1:
+                ((BitmapDrawable)descriptImage.getDrawable()).getBitmap().recycle();
+                descriptImage.setImageResource(R.drawable.today);
+                break;
+            case 2:
+                ((BitmapDrawable)descriptImage.getDrawable()).getBitmap().recycle();
+                descriptImage.setImageResource(R.drawable.seven_day);
+                break;
+            default:
+                break;
+        }
     }
 
     private void openAndQueryDb(final int mPage) {
