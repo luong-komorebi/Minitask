@@ -17,4 +17,15 @@
     <string name="time_error_purpose">A specific time is better for proper notification</string>
     <string name="task_to_be_done">Task to be done</string>
     <string name="detail">Detail</string>
+    <string name="clean_all_done">Clean done tasks</string>
+    <string name="app_version">Version 1.0</string>
+    <string name="made_by">Author: Luong Tran Thanh Vo</string>
+    <string name="contact_me">You can contact me at</string>
+    <string name="support_me">Support me at</string>
+    <string name="my_email">thanh.luong.for.fun@gmail.com</string>
+    <string name="github_acc">github.com/LewisVo</string>
+    <string name="twitter_acc">twitter.com/MiracleLuong</string>
+    <string name="facebook_acc">facebook.com/seeknd3stroy</string>
+    <string name="patreon_acc">patreon.com/luongtranthanhvo</string>
+    <string name="paypal_acc">paypal.me/LuongTranThanhVo</string>
 </resources>
