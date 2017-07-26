@@ -6,6 +6,8 @@ import android.provider.BaseColumns;
  * Created by luongvo on 20/07/2017.
  */
 
+
+// this class is for database use. Reference https://developer.android.com/training/basics/data-storage/databases.html
 public final class TodoListContract {
     private TodoListContract() {}
 

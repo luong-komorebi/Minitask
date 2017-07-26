@@ -8,7 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by luongvo on 20/07/2017.
  */
 
+
+// This class is for database use. Reference https://developer.android.com/training/basics/data-storage/databases.html
 public class TodoListDbHelper extends SQLiteOpenHelper {
+    // Our table has 4 attributes
+    // Id, content, done status and reminderdate
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TodoListContract.TodoListEntries.TABLE_NAME + " (" +
                     TodoListContract.TodoListEntries._ID + " INTEGER PRIMARY KEY," +

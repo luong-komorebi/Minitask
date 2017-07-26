@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Your Todos</string>
+    <string name="app_name">Minitask</string>
     <string name="about">About</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -16,4 +16,5 @@
     <string name="time_error">Please specify a time</string>
     <string name="time_error_purpose">A specific time is better for proper notification</string>
     <string name="task_to_be_done">Task to be done</string>
+    <string name="detail">Detail</string>
 </resources>

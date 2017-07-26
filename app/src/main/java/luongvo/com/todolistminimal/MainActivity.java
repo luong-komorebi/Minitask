@@ -42,18 +42,20 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.descriptImage) ImageSwitcher descriptImage;
     @BindView(R.id.actionButton) FloatingActionButton actionButton;
 
+    // images for switcher
     private static final int[] IMAGES = {R.drawable.inbox, R.drawable.today, R.drawable.seven_day};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        openAndQueryDb(0);
+        openAndQueryDb(0); // first query for inbox tab
         initializeComponents();
     }
 
     private void initializeComponents() {
         ButterKnife.bind(this);
+        // set the pager adapter. More info look in 3rd party library document
         pager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
         tabStrip.setViewPager(pager);
         tabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                // if user go to another tab change color, change image and query from database to match
                 descriptImage.setImageResource(IMAGES[position]);
                 changeColor(position);
                 openAndQueryDb(position);
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // add new item is clicked
                 Intent intent = new Intent(v.getContext(), AddTodoItem.class);
                 startActivity(intent);
             }
@@ -84,30 +88,34 @@ public class MainActivity extends AppCompatActivity {
         descriptImage.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
+                // set props for image switcher
                 ImageView imgview = new ImageView(getApplicationContext());
                 imgview.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 return imgview;
             }
         });
+        // Photo flies in and out
         Animation in = AnimationUtils.loadAnimation(this,android.R.anim.slide_in_left);
         Animation out = AnimationUtils.loadAnimation(this,android.R.anim.slide_out_right);
         descriptImage.setInAnimation(in);
         descriptImage.setOutAnimation(out);
-        descriptImage.setImageResource(IMAGES[0]);
+        descriptImage.setImageResource(IMAGES[0]); // first start render
     }
 
+    // this function open and query todoitems from database
     private void openAndQueryDb(final int mPage) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                toDoItems = new ArrayList<>();
+                toDoItems = new ArrayList<>(); // construct a new arraylist for listview
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                pager.getAdapter().notifyDataSetChanged();
+                pager.getAdapter().notifyDataSetChanged(); //tell pager not to cache the view or problem happens
+                // see commit message ea6cfaf97c1ba3a96f55a514e612dc5f78e2da65
             }
 
             @Override
@@ -115,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 TodoListDbHelper mDbHelper = new TodoListDbHelper(MainActivity.this);
                 SQLiteDatabase db = mDbHelper.getReadableDatabase();
                 Cursor cursor;
+                // depending on the page : inbox, today, or next 7 days to query
                 switch(mPage)
                 {
                     case 0:
@@ -158,8 +167,8 @@ public class MainActivity extends AppCompatActivity {
                     default:
                         cursor = null;
                 }
-                if(cursor.moveToFirst())
 
+                if(cursor.moveToFirst())
                 {
                     do {
                         String content = cursor.getString(cursor.getColumnIndex(
@@ -171,8 +180,9 @@ public class MainActivity extends AppCompatActivity {
                         String reminderDate = cursor.getString(cursor.getColumnIndex(
                                 TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
                         ));
-                        Boolean done = (doneInt == 1);
-                        if (content == null && reminderDate == null) break;
+                        Boolean done = (doneInt == 1); // because databse doesn't store boolean
+                        if (content == null && reminderDate == null) break; // stop before cursor go too far
+                        // no reminder date -> construct object with a space
                         if (reminderDate == null)
                             toDoItems.add(new ToDoItem(content, done, " ", false));
                         else toDoItems.add(new ToDoItem(content, done, reminderDate, true));
@@ -200,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // apply new fancy color based on material color tool
     private void applyNewColor (String actionBarColor, String tabStripColor, String indicatorColor) {
         ActionBar actionBar = getSupportActionBar();
         Window window = this.getWindow();
@@ -212,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // initiates menu options
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -219,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    // TODO: process menu item clicked
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

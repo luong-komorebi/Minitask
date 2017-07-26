@@ -41,16 +41,18 @@ public class ToDoItem {
         return reminderDate;
     }
 
-    @Override
-    public String toString() {
-        return "ToDoItem{" +
-                "content='" + content + '\'' +
-                ", done=" + done +
-                ", reminderDate='" + reminderDate + '\'' +
-                ", hasReminder=" + hasReminder +
-                '}';
-    }
+    // this serves logging.
+//    @Override
+//    public String toString() {
+//        return "ToDoItem{" +
+//                "content='" + content + '\'' +
+//                ", done=" + done +
+//                ", reminderDate='" + reminderDate + '\'' +
+//                ", hasReminder=" + hasReminder +
+//                '}';
+//    }
 
+    // compare object for remove from array list
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

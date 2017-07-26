@@ -25,7 +25,7 @@ public class DetailTodoItem extends AppCompatActivity {
     String reminder;
     Boolean hasReminder;
     Boolean done;
-    UpdateDatabase updateDatabase;
+    UpdateDatabase updateDatabase; // util to do update stuffs in db
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +38,12 @@ public class DetailTodoItem extends AppCompatActivity {
 
     private void initComponents() {
         ButterKnife.bind(this);
+        getSupportActionBar().setTitle(getString(R.string.detail));
         updateDatabase = new UpdateDatabase();
     }
 
     private void getDataFromIntent() {
+        // because we go from main activity to here
         Intent intent = getIntent();
         content = intent.getStringExtra("content");
         reminder = intent.getStringExtra("reminder");
@@ -51,10 +53,12 @@ public class DetailTodoItem extends AppCompatActivity {
 
 
     private void assignComponents() {
+        // update UI with the content taken from intent
         todoInfo.setText(content);
         if (hasReminder)
             reminderInfo.setText(reminder);
         else reminderInfo.setText(getString(R.string.not_found));
+        // if edit button is press fire add activity with a little tweak
         editTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +72,7 @@ public class DetailTodoItem extends AppCompatActivity {
             }
         });
 
+        // if delete is pressed then delete item in databse and alro remove object for notifydatsetchanged
         deleteTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
