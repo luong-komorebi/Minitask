@@ -48,11 +48,15 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     String content;
     String date;
     String time;
+
+
     String oldContent = "";
     String oldReminder = "";
     Boolean oldHasReminder;
     Boolean oldDone;
     Boolean existingData;
+
+    private long newRowId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +131,20 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
         addTodoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (time.equals("") && !date.equals("")) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(AddTodoItem.this).create();
+                    alertDialog.setTitle(getString(R.string.time_error));
+                    alertDialog.setMessage(getString(R.string.time_error_purpose));
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+                    return;
+                }
+
                 content = materialTextInput.getText().toString();
                 if ((oldContent.equals(content) || content == null) && oldReminder.equals(date + " " + time)){
                     Toast.makeText(AddTodoItem.this, "You made no change at all !?\n Press back to go back", Toast.LENGTH_SHORT).show();
@@ -139,6 +157,8 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                     toDoItem = new ToDoItem(oldContent, oldDone, oldReminder, oldHasReminder);
                     toDoItems.remove(toDoItem);
                 }
+                dateTimeUtils.ScheduleNotification(dateTimeUtils.getNotification(content, AddTodoItem.this),
+                        AddTodoItem.this, (int)newRowId, date + " " + time);
                 finish();
             }
         });
@@ -192,7 +212,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, toDoItem.getDone());
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE, toDoItem.getReminderDate());
         }
-        long newRowId = db.insert(TodoListContract.TodoListEntries.TABLE_NAME, null, values);
+        newRowId = db.insert(TodoListContract.TodoListEntries.TABLE_NAME, null, values);
     }
 
 

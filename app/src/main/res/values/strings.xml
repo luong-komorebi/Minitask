@@ -14,4 +14,7 @@
     <string name="reminder_info">Info about reminder:</string>
     <string name="not_found">Not found!</string>
     <string name="item_deleted">Task deleted!</string>
+    <string name="time_error">Please specify a time</string>
+    <string name="time_error_purpose">A specific time is better for proper notification</string>
+    <string name="task_to_be_done">Task to be done</string>
 </resources>

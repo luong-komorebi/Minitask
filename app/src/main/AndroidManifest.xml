@@ -34,6 +34,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="luongvo.com.todolistminimal.MainActivity"/>
         </activity>
+        <receiver android:name=".Utils.NotificationPublisher" />
     </application>
 
 </manifest>

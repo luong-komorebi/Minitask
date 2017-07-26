@@ -41,10 +41,6 @@ public class ToDoItem {
         return reminderDate;
     }
 
-    public void setReminderDate(String reminderDate) {
-        this.reminderDate = reminderDate;
-    }
-
     @Override
     public String toString() {
         return "ToDoItem{" +
