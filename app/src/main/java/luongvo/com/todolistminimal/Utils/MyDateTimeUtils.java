@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,13 +61,6 @@ public class MyDateTimeUtils {
         return (hourOfDay < nowHour || (hourOfDay == nowHour && minute <= nowMinute));
     }
 
-//    public long dateDiff(String dateTime) {
-//        Calendar calendar = Calendar.getInstance();
-//        Date today = calendar.getTime();
-//        Date d1 = dateTimeFormatter.parse(dateTime);
-//        return d1.getTime() - today.getTime();
-//    }
-
     public void ScheduleNotification(Notification notification,
                                      Context context, int notificationID, String dateTime) {
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);
@@ -88,7 +82,12 @@ public class MyDateTimeUtils {
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentTitle(context.getString(R.string.task_to_be_done));
         builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_warning_black_24dp);
+        builder.setSmallIcon(R.drawable.ic_stat_name);
+        builder.setDefaults(Notification.DEFAULT_ALL);
+        builder.setPriority(Notification.PRIORITY_MAX);
+        builder.setStyle(new Notification.BigTextStyle().bigText(content));
+        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
+                R.mipmap.ic_launcher));
         return builder.build();
     }
 }
