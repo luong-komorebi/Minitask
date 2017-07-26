@@ -3,7 +3,6 @@
     <string name="about">About</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_todo_item">Add task</string>
     <string name="add_todo_item_hint">Insert your task here</string>
     <string name="empty_input">Don\'t leave your task empty</string>
