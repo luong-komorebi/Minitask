@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.support.v4.app.NotificationCompat;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -88,20 +89,21 @@ public class MyDateTimeUtils {
             e.printStackTrace();
         }
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, futureInMillis.getTime() - System.currentTimeMillis(), pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, futureInMillis.getTime(), pendingIntent);
     }
 
     /* This is a helper function to build a notification object */
     public Notification getNotification(String content, Context context) {
-        Notification.Builder builder = new Notification.Builder(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(context.getString(R.string.task_to_be_done));
         builder.setContentText(content);
         builder.setSmallIcon(R.drawable.ic_stat_name);
         builder.setDefaults(Notification.DEFAULT_ALL);
         builder.setPriority(Notification.PRIORITY_MAX);
-        builder.setStyle(new Notification.BigTextStyle().bigText(content));
+        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(content));
         builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                 R.mipmap.ic_launcher));
+        builder.setShowWhen(false);
         return builder.build();
     }
 }

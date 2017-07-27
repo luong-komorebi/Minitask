@@ -155,8 +155,9 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                 // check if old content is the same as new content
                 // if yes then user didn't do any action and should press back rather than add
                 if ((oldContent.equals(content) || content == null) && oldReminder.equals(date + " " + time)){
-                    Toast.makeText(AddTodoItem.this, "You made no change at all !?\n Press back to go back", Toast.LENGTH_SHORT).show();
-                    return;
+//                    Toast.makeText(AddTodoItem.this, "You made no change at all !?\n Press back to go back", Toast.LENGTH_SHORT).show();
+//                    return;
+                    finish();
                 }
                 // no error found, start adding to database
                 addItemToDatabase();
