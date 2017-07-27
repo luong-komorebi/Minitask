@@ -1,5 +1,6 @@
 package luongvo.com.todolistminimal.Utils;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,6 +8,9 @@ import android.os.AsyncTask;
 
 import luongvo.com.todolistminimal.Database.TodoListContract;
 import luongvo.com.todolistminimal.Database.TodoListDbHelper;
+import luongvo.com.todolistminimal.ToDoItem;
+
+import static luongvo.com.todolistminimal.PageFragment.toDoItems;
 
 /**
  * Created by luongvo on 24/07/2017.
@@ -87,9 +91,30 @@ public class UpdateDatabase {
                 + " '" + reminder +"' ";
         TodoListDbHelper mDbHelper = new TodoListDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
         if (reminder.equals(" "))
             return db.delete(TodoListContract.TodoListEntries.TABLE_NAME, whereClause1, null);
         else
             return db.delete(TodoListContract.TodoListEntries.TABLE_NAME, whereClause2, null);
+    }
+
+    public long addItemToDatabase(String content, Boolean done, String reminderDate, Context context) {
+        TodoListDbHelper dbHelper = new TodoListDbHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        // when insert into database, also construct a new object for notifydatasetchanged()
+        if (reminderDate.equals(" ")) { // no reminder
+            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, content);
+            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, done);
+            values.putNull(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE);
+        }
+        else {  //  with reminder
+            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, content);
+            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, done);
+            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE, reminderDate);
+        }
+        // insert into a row in database
+        return db.insert(TodoListContract.TodoListEntries.TABLE_NAME, null, values);
     }
 }

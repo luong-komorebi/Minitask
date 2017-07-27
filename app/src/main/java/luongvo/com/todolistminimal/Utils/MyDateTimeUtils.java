@@ -92,6 +92,7 @@ public class MyDateTimeUtils {
         alarmManager.set(AlarmManager.RTC_WAKEUP, futureInMillis.getTime(), pendingIntent);
     }
 
+    /* this cancel a future notification if item is deleted or editted */
     public void cancelScheduledNotification(Notification notification,
                                      Context context, int notificationID) {
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);

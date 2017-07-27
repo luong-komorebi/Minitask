@@ -41,10 +41,10 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     @BindView(R.id.reminderText) TextView reminderText;
     @BindView(R.id.addTodoBtn) FloatingActionButton addTodoBtn;
 
-    TodoListDbHelper dbHelper;
 
     ToDoItem toDoItem;
     MyDateTimeUtils dateTimeUtils;
+    UpdateDatabase updateDatabase;
 
     String content;
     String date;
@@ -75,9 +75,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     private void initializeComponents() {
         getSupportActionBar().setTitle(R.string.add_todo_item);
         ButterKnife.bind(this);
-
-        dbHelper = new TodoListDbHelper(this);
-
+        updateDatabase = new UpdateDatabase();
         dateTimeUtils = new MyDateTimeUtils();
         date ="";
         time ="";
@@ -91,7 +89,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                     buttonSetTime.setVisibility(View.GONE);
                     reminderText.setVisibility(View.GONE);
                     reminderText.setText(getString(R.string.reminder_set_at));
-                    date = "";
+                    date = ""; // reset date time field
                     time = "";
                 }
                 else {
@@ -138,30 +136,11 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
         addTodoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // check if user chose date but didnt choose time
-                if (time.equals("") && !date.equals("")) {
-                    AlertDialog alertDialog = new AlertDialog.Builder(AddTodoItem.this).create();
-                    alertDialog.setTitle(getString(R.string.time_error));
-                    alertDialog.setMessage(getString(R.string.time_error_purpose));
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    alertDialog.show();
+                // validate all input field
+                if (!validateAllInput())
                     return;
-                }
-
                 // get content input from user
                 content = materialTextInput.getText().toString();
-                // check if old content is the same as new content
-                // if yes then user didn't do any action and should press back rather than add
-                if ((oldContent.equals(content) || content == null) && oldReminder.equals(date + " " + time)){
-//                    Toast.makeText(AddTodoItem.this, "You made no change at all !?\n Press back to go back", Toast.LENGTH_SHORT).show();
-//                    return;
-                    finish();
-                }
                 // no error found, start adding to database
                 addItemToDatabase();
                 // this check is used for update/edit a todoItem case
@@ -183,7 +162,44 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                 finish();
             }
         });
+    }
 
+    private Boolean validateAllInput() {
+        // check if user chose date but didn't choose time
+        if (time.equals("") && !date.equals("")) {
+            AlertDialog alertDialog = new AlertDialog.Builder(AddTodoItem.this).create();
+            alertDialog.setTitle(getString(R.string.time_error));
+            alertDialog.setMessage(getString(R.string.time_error_purpose));
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            // user choose our default time
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "CHOOSE DEFAULT 9 A.M.", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // explicitly call onTimeSet to take advantage of time check
+                    onTimeSet(null, 9, 0, 0); // default picked time at 9:00 A.M
+                }
+            });
+            alertDialog.show();
+            return false;
+        }
+        // first validate if the input is empty or not
+        if (!materialTextInput.validateWith(
+                new RegexpValidator("String must not be empty", "^(?!\\s*$).+"))) {
+            Toast.makeText(AddTodoItem.this, "Empty task detected! No task added!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        // check if old content is the same as new content
+        // if yes then user didn't do any action and should press back rather than add
+        if ((oldContent.equals(content) || content == null) && oldReminder.equals(date + " " + time)){
+            finish(); // finish activity instead of returning anything - UX
+        }
+        // everything is OK.
+        return true;
     }
 
     // load data passed from another activity, return success or not
@@ -216,34 +232,16 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
 
     // this function is to add an item into database
     private void addItemToDatabase() {
-        // first validate if the input is empty or not
-        if (!materialTextInput.validateWith(
-                new RegexpValidator("String must not be empty", "^(?!\\s*$).+"))) {
-            Toast.makeText(this, "Empty task detected! No task added!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
+        // concat date and time
         String reminderDate = date + " " + time;
 
         // when insert into database, also construct a new object for notifydatasetchanged()
-        if (reminderDate.equals(" ")) { // no reminder
-            toDoItem = new ToDoItem(content, false, " ", false);
-            toDoItems.add(toDoItem);
-            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, toDoItem.getContent());
-            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, toDoItem.getDone());
-            values.putNull(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE);
-        }
-        else {  //  with reminder
+        if (reminderDate.equals(" ")) // no reminder
+            toDoItem = new ToDoItem(content, false, reminderDate, false);
+        else  //  with reminder
             toDoItem = new ToDoItem(content, false, reminderDate, true);
-            toDoItems.add(toDoItem);
-            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, toDoItem.getContent());
-            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, toDoItem.getDone());
-            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE, toDoItem.getReminderDate());
-        }
-        // insert into a row in database
-        newRowId = db.insert(TodoListContract.TodoListEntries.TABLE_NAME, null, values);
+        toDoItems.add(toDoItem);
+        newRowId = updateDatabase.addItemToDatabase(content, false, reminderDate, AddTodoItem.this);
     }
 
 
