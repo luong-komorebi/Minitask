@@ -1,9 +1,7 @@
 package luongvo.com.todolistminimal;
 
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -24,8 +22,6 @@ import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import luongvo.com.todolistminimal.Database.TodoListContract;
-import luongvo.com.todolistminimal.Database.TodoListDbHelper;
 import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
 import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 

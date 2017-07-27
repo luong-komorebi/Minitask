@@ -32,6 +32,7 @@ import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.Adapters.MyFragmentPagerAdapter;
 import luongvo.com.todolistminimal.Database.TodoListContract;
 import luongvo.com.todolistminimal.Database.TodoListDbHelper;
+import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 
 import static luongvo.com.todolistminimal.PageFragment.toDoItems;
 
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tabs) PagerSlidingTabStrip tabStrip;
     @BindView(R.id.descriptImage) ImageSwitcher descriptImage;
     @BindView(R.id.actionButton) FloatingActionButton actionButton;
+
+    UpdateDatabase updateDatabase;
 
     // images for switcher
     private static final int[] IMAGES = {R.drawable.inbox, R.drawable.today, R.drawable.seven_day};
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeComponents() {
+        updateDatabase = new UpdateDatabase();
         ButterKnife.bind(this);
         // set the pager adapter. More info look in 3rd party library document
         pager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
@@ -238,6 +242,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.about_menu_item:
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.clean_all_done:
+                updateDatabase.removeAllDoneItem(MainActivity.this);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

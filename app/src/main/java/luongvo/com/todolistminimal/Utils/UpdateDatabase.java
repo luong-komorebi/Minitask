@@ -1,16 +1,16 @@
 package luongvo.com.todolistminimal.Utils;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import luongvo.com.todolistminimal.Database.TodoListContract;
 import luongvo.com.todolistminimal.Database.TodoListDbHelper;
-import luongvo.com.todolistminimal.ToDoItem;
-
-import static luongvo.com.todolistminimal.PageFragment.toDoItems;
+import luongvo.com.todolistminimal.MainActivity;
 
 /**
  * Created by luongvo on 24/07/2017.
@@ -98,23 +98,51 @@ public class UpdateDatabase {
             return db.delete(TodoListContract.TodoListEntries.TABLE_NAME, whereClause2, null);
     }
 
+    // add item to database given every info
     public long addItemToDatabase(String content, Boolean done, String reminderDate, Context context) {
         TodoListDbHelper dbHelper = new TodoListDbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         // when insert into database, also construct a new object for notifydatasetchanged()
-        if (reminderDate.equals(" ")) { // no reminder
-            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, content);
-            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, done);
+        values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, content);
+        values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, done);
+        if (reminderDate.equals(" ")) // no reminder = reminder is null
             values.putNull(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE);
-        }
-        else {  //  with reminder
-            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT, content);
-            values.put(TodoListContract.TodoListEntries.COLUMN_NAME_DONE, done);
+        else  //  with reminder
             values.put(TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE, reminderDate);
-        }
         // insert into a row in database
         return db.insert(TodoListContract.TodoListEntries.TABLE_NAME, null, values);
+    }
+
+    // this function remove all done item in database
+    public void removeAllDoneItem(final Context context) {
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Cleaning...");
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog.show();
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                progressDialog.dismiss();
+                Intent intent = new Intent(context, MainActivity.class);
+                context.startActivity(intent);
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                String whereClause = TodoListContract.TodoListEntries.COLUMN_NAME_DONE + " = 1";
+                TodoListDbHelper mDbHelper = new TodoListDbHelper(context);
+                SQLiteDatabase db = mDbHelper.getWritableDatabase();
+                db.delete(TodoListContract.TodoListEntries.TABLE_NAME, whereClause, null);
+                return null;
+            }
+        }.execute();
     }
 }
