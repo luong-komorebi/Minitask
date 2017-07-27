@@ -92,6 +92,16 @@ public class MyDateTimeUtils {
         alarmManager.set(AlarmManager.RTC_WAKEUP, futureInMillis.getTime(), pendingIntent);
     }
 
+    public void cancelScheduledNotification(Notification notification,
+                                     Context context, int notificationID) {
+        Intent notificationIntent = new Intent(context, NotificationPublisher.class);
+        notificationIntent.putExtra(NOTIFICATION_ID, notificationID);
+        notificationIntent.putExtra(NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+    }
+
     /* This is a helper function to build a notification object */
     public Notification getNotification(String content, Context context) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);

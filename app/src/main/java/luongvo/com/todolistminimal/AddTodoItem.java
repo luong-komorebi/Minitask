@@ -60,6 +60,9 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     // rowID after adding into database
     private long newRowId;
 
+    // rowID after deleting from database
+    private long oldRowId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,9 +168,13 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                 // basically, after insert a new one, delete the old one, like trigger in database.
                 if (existingData) {
                     UpdateDatabase updateDatabaseInstance = new UpdateDatabase();
-                    updateDatabaseInstance.removeInDatabase(oldContent, oldReminder, AddTodoItem.this);
+                    // remove in database
+                    oldRowId = updateDatabaseInstance.removeInDatabase(oldContent, oldReminder, AddTodoItem.this);
                     toDoItem = new ToDoItem(oldContent, oldDone, oldReminder, oldHasReminder);
                     toDoItems.remove(toDoItem);
+                    // remove existing scheduled notification
+                    dateTimeUtils.cancelScheduledNotification(dateTimeUtils.getNotification(oldContent, AddTodoItem.this),
+                            AddTodoItem.this, (int)oldRowId);
                 }
                 // schedule a notification if date and time is set
                 if (!(date+" "+time).equals(" "))

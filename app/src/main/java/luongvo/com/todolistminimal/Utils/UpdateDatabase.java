@@ -73,49 +73,23 @@ public class UpdateDatabase {
     }
 
     // this function remove an item in the database. Use case : delete on clicked
-    public void removeInDatabase(final String content, final String reminder, final Context context) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                TodoListDbHelper mDbHelper = new TodoListDbHelper(context);
-                SQLiteDatabase db = mDbHelper.getWritableDatabase();
-                Cursor cursor;
-                // if no reminder is found then query sentence is a bit different
-                if (reminder.equals(" "))
-                    cursor = db.rawQuery(
-                            "DELETE FROM "
-                            + TodoListContract.TodoListEntries.TABLE_NAME
-                            + " WHERE "
-                            + TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + " = "
-                            + " '" + content +"' "
-                            + " AND "
-                            + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
-                            + " IS NULL"
-                            , null);
-                else cursor = db.rawQuery(
-                        "DELETE FROM "
-                        + TodoListContract.TodoListEntries.TABLE_NAME
-                        + " WHERE "
-                        + TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + " = "
-                        + " '" + content +"' "
-                        + " AND "
-                        + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE + " = "
-                        + " '" + reminder +"' "
-                        , null);
-                cursor.moveToFirst();
-                cursor.close();
-                return null;
-            }
-        }.execute();
+    public long removeInDatabase(final String content, final String reminder, final Context context) {
+        String whereClause1 = TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + " = "
+                + " '" + content +"' "
+                + " AND "
+                + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE
+                + " IS NULL";
+        // if reminder is found then query sentence is a bit different
+        String whereClause2 = TodoListContract.TodoListEntries.COLUMN_NAME_CONTENT + " = "
+                + " '" + content +"' "
+                + " AND "
+                + TodoListContract.TodoListEntries.COLUMN_NAME_REMINDERDATE + " = "
+                + " '" + reminder +"' ";
+        TodoListDbHelper mDbHelper = new TodoListDbHelper(context);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        if (reminder.equals(" "))
+            return db.delete(TodoListContract.TodoListEntries.TABLE_NAME, whereClause1, null);
+        else
+            return db.delete(TodoListContract.TodoListEntries.TABLE_NAME, whereClause2, null);
     }
 }
