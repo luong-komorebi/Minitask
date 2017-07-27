@@ -235,17 +235,18 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    // TODO: process menu item clicked
+    // process menu item clicked
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.about_menu_item:
+                // start about activity
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.clean_all_done:
+                // clean all done tasks then recreate activity
                 updateDatabase.removeAllDoneItem(MainActivity.this);
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

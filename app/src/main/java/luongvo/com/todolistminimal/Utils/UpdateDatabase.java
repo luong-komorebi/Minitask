@@ -1,5 +1,6 @@
 package luongvo.com.todolistminimal.Utils;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import luongvo.com.todolistminimal.Database.TodoListContract;
 import luongvo.com.todolistminimal.Database.TodoListDbHelper;
 import luongvo.com.todolistminimal.MainActivity;
+import luongvo.com.todolistminimal.R;
 
 /**
  * Created by luongvo on 24/07/2017.
@@ -118,8 +120,8 @@ public class UpdateDatabase {
     // this function remove all done item in database
     public void removeAllDoneItem(final Context context) {
         final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Cleaning...");
-
+        progressDialog.setMessage(context.getString(R.string.cleaning));
+        // async task to delete done item
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
@@ -130,13 +132,14 @@ public class UpdateDatabase {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                // dismiss dialog and recreate activity after delete
                 progressDialog.dismiss();
-                Intent intent = new Intent(context, MainActivity.class);
-                context.startActivity(intent);
+                ((Activity)context).recreate(); // get activity method from context by cast
             }
 
             @Override
             protected Void doInBackground(Void... params) {
+                // delete all with done status = 1
                 String whereClause = TodoListContract.TodoListEntries.COLUMN_NAME_DONE + " = 1";
                 TodoListDbHelper mDbHelper = new TodoListDbHelper(context);
                 SQLiteDatabase db = mDbHelper.getWritableDatabase();
