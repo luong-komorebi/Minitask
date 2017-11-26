@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Minitask</string>
+    <string name="app_name" translatable="false">Minitask</string>
     <string name="about">About</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -20,13 +20,23 @@
     <string name="detail">Detail</string>
     <string name="clean_all_done">Clean done tasks</string>
     <string name="app_version">Version 1.0</string>
-    <string name="made_by">Author: Luong Tran Thanh Vo</string>
+    <string name="made_by" translatable="false">Author: Luong Tran Thanh Vo</string>
     <string name="contact_me">You can contact me at</string>
     <string name="support_me">Support me at</string>
-    <string name="my_email">thanh.luong.for.fun@gmail.com</string>
-    <string name="github_acc">github.com/LewisVo</string>
-    <string name="twitter_acc">twitter.com/MiracleLuong</string>
-    <string name="facebook_acc">facebook.com/seeknd3stroy</string>
-    <string name="patreon_acc">patreon.com/luongtranthanhvo</string>
-    <string name="paypal_acc">paypal.me/LuongTranThanhVo</string>
+    <string name="my_email" translatable="false">thanh.luong.for.fun@gmail.com</string>
+    <string name="github_acc" translatable="false">github.com/LewisVo</string>
+    <string name="twitter_acc" translatable="false">twitter.com/MiracleLuong</string>
+    <string name="facebook_acc" translatable="false">facebook.com/seeknd3stroy</string>
+    <string name="patreon_acc" translatable="false">patreon.com/luongtranthanhvo</string>
+    <string name="paypal_acc" translatable="false">paypal.me/LuongTranThanhVo</string>
+
+    <!--Change, strings for the menu dialog-->
+    <string name="delete_message">Are you sure you want to delete the task?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_all_message">Are you sure you want to delete all the selected tasks?</string>
+    <string name="deleted_all_task">Selected tasks deleted</string>
+
+    <string name="click_item">Click an item</string>
+
 </resources>

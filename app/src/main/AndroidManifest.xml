@@ -45,6 +45,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="luongvo.com.todolistminimal.MainActivity"/>
         </activity>
+
+        <activity android:name=".DetailActivity"/>
     </application>
 
 </manifest>
