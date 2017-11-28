@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:paddingTop="4dp"
-              android:paddingBottom="4dp"
-              android:id="@+id/taskList">
+    android:id="@+id/taskList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="horizontal"
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp">
+
     <CheckBox
+        android:id="@+id/checkDone"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:buttonTint="#1a237e"
-        android:id="@+id/checkDone"
-        android:focusable="false"/>
+        android:focusable="false" />
+
     <TextView
+        android:id="@+id/todoContent"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="8"
-        android:textSize="14sp"
-        android:gravity="center_vertical"
-        android:textColor="#000051"
-        android:maxLines="1"
         android:ellipsize="end"
-        android:id="@+id/todoContent"/>
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textColor="#000051"
+        android:textSize="14sp" />
+
     <ImageView
+        android:id="@+id/clockReminder"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:visibility="gone"
         android:src="@drawable/ic_alarm_on_black_18dp"
-        android:id="@+id/clockReminder"/>
+        android:visibility="gone" />
 </LinearLayout>

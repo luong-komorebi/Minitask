@@ -12,15 +12,23 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
 import luongvo.com.todolistminimal.Utils.UpdateDatabase;
+import luongvo.com.todolistminimal.Utils.UpdateFirebase;
 
 import static luongvo.com.todolistminimal.PageFragment.toDoItems;
 
 public class DetailTodoItem extends AppCompatActivity {
 
-    @BindView(R.id.todoInfo) TextView todoInfo;
-    @BindView(R.id.reminderInfo) TextView reminderInfo;
-    @BindView(R.id.editTodoBtn) FloatingActionButton editTodo;
-    @BindView(R.id.deleteTodoBtn) FloatingActionButton deleteTodo;
+    // Declare the class with Firebase methods
+    UpdateFirebase updateFirebase;
+
+    @BindView(R.id.todoInfo)
+    TextView todoInfo;
+    @BindView(R.id.reminderInfo)
+    TextView reminderInfo;
+    @BindView(R.id.editTodoBtn)
+    FloatingActionButton editTodo;
+    @BindView(R.id.deleteTodoBtn)
+    FloatingActionButton deleteTodo;
 
     String content;
     String reminder;
@@ -28,6 +36,8 @@ public class DetailTodoItem extends AppCompatActivity {
     Boolean done;
     UpdateDatabase updateDatabase; // util to do update stuffs in db
     MyDateTimeUtils dateTimeUtils; // util to do stuffs with notification
+
+    String mItemId;
 
     private long oldRowId;
 
@@ -45,6 +55,9 @@ public class DetailTodoItem extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.detail));
         updateDatabase = new UpdateDatabase();
         dateTimeUtils = new MyDateTimeUtils();
+
+        // Instantiate a new UpdateFirebase class
+        updateFirebase = new UpdateFirebase();
     }
 
     private void getDataFromIntent() {
@@ -54,6 +67,7 @@ public class DetailTodoItem extends AppCompatActivity {
         reminder = intent.getStringExtra("reminder");
         hasReminder = intent.getExtras().getBoolean("hasReminder");
         done = intent.getExtras().getBoolean("done");
+        mItemId = intent.getExtras().getString("itemId");
     }
 
 
@@ -72,26 +86,31 @@ public class DetailTodoItem extends AppCompatActivity {
                 intent.putExtra("reminder", reminder);
                 intent.putExtra("hasReminder", hasReminder);
                 intent.putExtra("done", done);
+                intent.putExtra("id", mItemId);
                 finish();
                 startActivity(intent);
             }
         });
 
-        // if delete is pressed then delete item in databse and alro remove object for notifydatsetchanged
+        // if delete is pressed then delete item in database and also remove object for notifydatsetchanged
         deleteTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(DetailTodoItem.this, getString(R.string.item_deleted), Toast.LENGTH_SHORT).show();
-                ToDoItem toDoItem = new ToDoItem(content, done, reminder, hasReminder);
+                ToDoItem toDoItem = new ToDoItem(content, done, reminder, hasReminder, mItemId);
                 toDoItems.remove(toDoItem);
                 // remove in database
-                oldRowId = updateDatabase.removeInDatabase(content, reminder, DetailTodoItem.this);
+                oldRowId = updateDatabase.removeInDatabase(content, reminder, mItemId, DetailTodoItem.this);
                 // remove existing scheduled notification if existed
                 if (!reminder.equals(" "))
-                    dateTimeUtils.cancelScheduledNotification(dateTimeUtils.getNotification(content,DetailTodoItem.this),
+                    dateTimeUtils.cancelScheduledNotification(dateTimeUtils.getNotification(content, DetailTodoItem.this),
                             DetailTodoItem.this, (int) oldRowId);
+
+                // **New** Delete the item from Firebase Database
+                updateFirebase.deleteItem(toDoItem);
                 finish();
             }
         });
     }
+
 }

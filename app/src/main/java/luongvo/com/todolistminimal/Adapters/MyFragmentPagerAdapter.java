@@ -12,7 +12,7 @@ import luongvo.com.todolistminimal.PageFragment;
 
 public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
     private final int PAGE_COUNT = 3;
-    private String[] tabTitles = new String[] {"Inbox", "Today", "Next 7 days"};  // titles for 3 tabs
+    private String[] tabTitles = new String[]{"Inbox", "Today", "Next 7 days"};  // titles for 3 tabs
 
     public MyFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -21,10 +21,14 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0: return PageFragment.newInstance(0);
-            case 1: return PageFragment.newInstance(1);
-            case 2: return PageFragment.newInstance(2);
-            default: return null;
+            case 0:
+                return PageFragment.newInstance(0);
+            case 1:
+                return PageFragment.newInstance(1);
+            case 2:
+                return PageFragment.newInstance(2);
+            default:
+                return null;
         }
     }
 

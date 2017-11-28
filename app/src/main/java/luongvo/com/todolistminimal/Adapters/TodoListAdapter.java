@@ -28,35 +28,20 @@ import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 
 /*
  * This is an adapter for todolist listview.
+ * This class is not used in this pull. Redlor 26/11/2017
  */
 public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
 
-    private Context context;
-    private int resourceID;
     // a util to do update stuffs in the database
     UpdateDatabase updateUtil = new UpdateDatabase();
+    private Context context;
+    private int resourceID;
 
     // initiate the adapter with context, resourceID and todoItems.
     public TodoListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<ToDoItem> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resourceID = resource;
-    }
-
-    /* A viewholder for later cache in listview. Implemented with Butterknife
-     * Basically there are 3 elements in each item of the list:
-     * Text content
-     * A checkbox to check done or not
-     * A clock icon to show if the item has a reminder or not
-     */
-    static class ViewHolder {
-        @BindView(R.id.todoContent) TextView content;
-        @BindView(R.id.checkDone) CheckBox checkDone;
-        @BindView(R.id.clockReminder) ImageView clockReminder;
-
-        public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
-        }
     }
 
     // Override GetView to manipulate UI
@@ -81,7 +66,8 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
         // this is for the first time UI render
         if (viewHolder.checkDone.isChecked())
             viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        else viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+        else
+            viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         // render the clock icon if the item has a reminder
         if (toDoItem.getHasReminder())
             viewHolder.clockReminder.setVisibility(View.VISIBLE);
@@ -93,21 +79,42 @@ public class TodoListAdapter extends ArrayAdapter<ToDoItem> {
         // manipulate the checkbox so we need to update things on clicked.
         viewHolder.checkDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 if (isChecked) {
                     toDoItem.setDone(true);
                     updateUtil.updateDoneInDatabase(toDoItem.getContent(), toDoItem.getReminderDate(),
-                            toDoItem.getDone(), context);
+                            toDoItem.getDone(), toDoItem.getItemId(), context);
+
                     viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                }
-                else {
+                } else {
                     toDoItem.setDone(false);
                     updateUtil.updateDoneInDatabase(toDoItem.getContent(), toDoItem.getReminderDate(),
-                            toDoItem.getDone(), context);
-                    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                            toDoItem.getDone(), toDoItem.getItemId(), context);
+                    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
             }
         });
+
+
         return convertView;
+    }
+
+    /* A viewholder for later cache in listview. Implemented with Butterknife
+     * Basically there are 3 elements in each item of the list:
+     * Text content
+     * A checkbox to check done or not
+     * A clock icon to show if the item has a reminder or not
+     */
+    static class ViewHolder {
+        @BindView(R.id.todoContent)
+        TextView content;
+        @BindView(R.id.checkDone)
+        CheckBox checkDone;
+        @BindView(R.id.clockReminder)
+        ImageView clockReminder;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }

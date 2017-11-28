@@ -1,21 +1,35 @@
 package luongvo.com.todolistminimal;
 
+import java.io.Serializable;
+
 /**
  * Created by luongvo on 19/07/2017.
  */
 
-public class ToDoItem {
+public class ToDoItem implements Serializable {
     private String content;
     private Boolean done;
     private String reminderDate;
     private Boolean hasReminder;
+    private String mItemId;
 
-    public ToDoItem(String content, Boolean done, String reminderDate, Boolean hasReminder) {
+    // Old constructor
+  /*  public ToDoItem(String content, Boolean done, String reminderDate, Boolean hasReminder) {
         this.content = content;
         this.done = done;
         this.reminderDate = reminderDate;
         this.hasReminder = hasReminder;
+    }*/
+
+    // New cionstrucotr with Firebase Id variable
+    public ToDoItem(String content, Boolean done, String reminderDate, Boolean hasReminder, String itemId) {
+        this.content = content;
+        this.done = done;
+        this.reminderDate = reminderDate;
+        this.hasReminder = hasReminder;
+        this.mItemId = itemId;
     }
+
 
     public Boolean getHasReminder() {
         return hasReminder;
@@ -39,6 +53,14 @@ public class ToDoItem {
 
     public String getReminderDate() {
         return reminderDate;
+    }
+
+    public String getItemId() {
+        return mItemId;
+    }
+
+    public void setItemId(String mItemId) {
+        this.mItemId = mItemId;
     }
 
     // this serves logging.
@@ -71,5 +93,16 @@ public class ToDoItem {
         if (done != other.done)
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ToDoItem{" +
+                "content='" + content + '\'' +
+                ", done=" + done +
+                ", reminderDate='" + reminderDate + '\'' +
+                ", hasReminder=" + hasReminder +
+                ", mItemId='" + mItemId + '\'' +
+                '}';
     }
 }
