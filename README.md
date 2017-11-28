@@ -1,3 +1,5 @@
+*Notice: This app is no longer maintained here. Please visit https://github.com/redlor/Minitask for further development.*
+
 # Minitask  
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
