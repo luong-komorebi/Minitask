@@ -7,6 +7,7 @@
 
 ## About 
 Minitask is a mini, lightweight (<5MB), and simple app for reminders/ todo list/ task management. The app is simple with very basic functions like task list, date time reminder and features a beautiful, efficient UI.  I made Minitask while I was learning Android Development. There has been various apps of the same function on the PlayStore, but making this app enables me to sharpen my Android skills and implement my idea.
+Redlor: I am taking on the development of this app from November 2017. The aim is to switch to Firebase from SQLite and make some enhancements. I need help with issues in the Issues section and translations and any kind of suggestion are very welcome.
 
 ## Download  
 
