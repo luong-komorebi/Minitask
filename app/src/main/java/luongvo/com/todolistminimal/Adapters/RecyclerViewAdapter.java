@@ -13,14 +13,16 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,16 +39,20 @@ import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
+    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private String uid = firebaseUser.getUid();
+    private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
+
     // a util to do update stuffs in the database
     UpdateDatabase updateUtil = new UpdateDatabase();
     private Context mContext;
     private int mResourceID;
-    private List<ToDoItem> mToDoItemList;
+    private ArrayList<ToDoItem> mToDoItemList;
     private OnItemClickListener mListener;
     private OnItemLongClickListener mLongListener;
 
     // Constructor
-    public RecyclerViewAdapter(@NonNull Context context, @LayoutRes int resource, List<ToDoItem> toDoItemList, OnItemClickListener listener, OnItemLongClickListener longClickListener) {
+    public RecyclerViewAdapter(@NonNull Context context, @LayoutRes int resource, ArrayList<ToDoItem> toDoItemList, OnItemClickListener listener, OnItemLongClickListener longClickListener) {
         super();
         this.mContext = context;
         this.mResourceID = resource;
@@ -64,10 +70,77 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         final ToDoItem toDoItem = mToDoItemList.get(position);
-
         // set the content of the item
+        viewHolder.content.setText(toDoItem.getContent());
+        // set the checkbox status of the item
+        viewHolder.checkDone.setChecked(toDoItem.getDone());
+        // check if checkbox is checked, then strike through the text
+        // this is for the first time UI render
+        if (viewHolder.checkDone.isChecked()) {
+            viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }else {
+            viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+        // render the clock icon if the item has a reminder
+        if (toDoItem.getHasReminder())
+            viewHolder.clockReminder.setVisibility(View.VISIBLE);
+        else
+            viewHolder.clockReminder.setVisibility(View.INVISIBLE);
+
+
+        viewHolder.checkDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
+
+
+                mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            String id = dsp.getKey();
+                            System.out.println("id " + id);
+                            if (b) {
+                                toDoItem.setDone(true);
+                                HashMap<String, Object> map = new HashMap<>();
+                                map.put("done", true);
+                                mDatabaseReference.child(id).updateChildren(map);
+                                viewHolder.checkDone.setOnCheckedChangeListener(null);
+
+                            } else {
+                                toDoItem.setDone(false);
+                                HashMap<String, Object> map = new HashMap<>();
+                                map.put("done", false);
+                                mDatabaseReference.child(id).updateChildren(map);
+                                viewHolder.checkDone.setOnCheckedChangeListener(null);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+              /*  if (b) {
+                    toDoItem.setDone(true);
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("done", true);
+                    mDatabaseReference.child(id).updateChildren(map);
+                    viewHolder.checkDone.setOnCheckedChangeListener(null);
+                    // mDatabaseReference.child(id).setValue(toDoItem);
+                    //   mFirebaseAdapter.notifyDataSetChanged();
+                    //     mDatabaseReference.child(id).child("done").setValue(true);
+                } else {
+                    toDoItem.setDone(false);
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("done", false);
+                    mDatabaseReference.child(id).updateChildren(map);
+                    viewHolder.checkDone.setOnCheckedChangeListener(null);
+*/
+                }
+      /*  // set the content of the item
         viewHolder.content.setText(toDoItem.getContent());
         // set the checkbox status of the item
         viewHolder.checkDone.setChecked(toDoItem.getDone());
@@ -93,30 +166,54 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
                     // **New** Change done value in Firebase Database, set true
-                    DatabaseReference myReference = FirebaseDatabase.getInstance().getReference();
-                    Query query = myReference.child("toDoItems").orderByChild("content").equalTo(toDoItem.getContent());
+                  //  Query query = databaseReference.equalTo(toDoItem.getItemId().);
 
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                   databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                dataSnapshot1.getRef().child("done").setValue(isChecked);
+                                ToDoItem toDoItem1 = dataSnapshot1.getValue(ToDoItem.class);
+
+                                String key = dataSnapshot1.getRef().getKey();
+                              //  System.out.println("key " + key);
+                                String id = dataSnapshot1.getRef().getKey();
+
+                                    databaseReference.child(key).child("done").setValue(true);
+
+                           //     System.out.println("todoitem1 " + toDoItem1 + id);
+                             //   dataSnapshot1.getRef().child("done").setValue(isChecked);
+                             //   System.out.println(databaseReference.child(id));
                             }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                *//*    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            System.out.println("datasnapshot " + dataSnapshot);
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                dataSnapshot1.getRef().child("done").setValue(true);
+                            }
+System.out.println(dataSnapshot);
                         }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
                         }
                     });
-
+*//*
                 } else {
                     toDoItem.setDone(false);
                     updateUtil.updateDoneInDatabase(toDoItem.getContent(), toDoItem.getReminderDate(),
                             toDoItem.getDone(), toDoItem.getItemId(), mContext);
 
                     // **New** Change done value in Firebase Database, set false
-                    DatabaseReference myReference = FirebaseDatabase.getInstance().getReference();
-                    Query query = myReference.child("toDoItems").orderByChild("content").equalTo(toDoItem.getContent());
+           *//*         Query query = databaseReference.equalTo(toDoItem.getItemId());
 
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -130,13 +227,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         public void onCancelled(DatabaseError databaseError) {
 
                         }
-                    });
+                    });*//*
                     viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
             }
-        });
+        });*/
 
-        viewHolder.bind(mToDoItemList.get(position), mListener, mLongListener);
+            });
+                viewHolder.bind(mToDoItemList.get(position), mListener, mLongListener);
 
     }
 

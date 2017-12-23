@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Minitask.iml" filepath="$PROJECT_DIR$/Minitask.iml" />
-      <module fileurl="file://C:\Users\Hp\AndroidStudioProjects\Minitask\Minitask2.iml" filepath="C:\Users\Hp\AndroidStudioProjects\Minitask\Minitask2.iml" />
-      <module fileurl="file://C:\Users\Hp\AndroidStudioProjects\Minitask\TodoListMinimal.iml" filepath="C:\Users\Hp\AndroidStudioProjects\Minitask\TodoListMinimal.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

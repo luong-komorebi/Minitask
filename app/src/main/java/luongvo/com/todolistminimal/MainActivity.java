@@ -4,12 +4,10 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -24,44 +22,52 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.Adapters.MyFragmentPagerAdapter;
-import luongvo.com.todolistminimal.Database.TodoListContract;
-import luongvo.com.todolistminimal.Database.TodoListDbHelper;
 import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 import luongvo.com.todolistminimal.Utils.UpdateFirebase;
-
-import static luongvo.com.todolistminimal.PageFragment.toDoItems;
 
 public class MainActivity extends AppCompatActivity {
 
     // images for switcher
     private static final int[] IMAGES = {R.drawable.inbox, R.drawable.today, R.drawable.seven_day};
+    public static final String ANONYMOUS = "anonymous";
+
     // Declare a variable to check if in Dual Pane mode
     public static boolean mTwoPane;
+
     // Declare the class with Firebase methods
     UpdateFirebase updateFirebase;
+
+    // Firebase Authentication
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    public static final int RC_SIGN_IN = 1;
+
+    private String mUsername;
+
     @BindView(R.id.view_pager)
     ViewPager pager;
     @BindView(R.id.tabs)
     PagerSlidingTabStrip tabStrip;
     @BindView(R.id.descriptImage)
-    ImageSwitcher descriptImage;
+    ImageView descriptImage;
     @BindView(R.id.actionButton)
     FloatingActionButton actionButton;
     UpdateDatabase updateDatabase;
 
-    // Prevent dialog dismiss when orientation changes. Redlor
+    // Prevent dialog dismiss when orientation changes.
     private static void doKeepDialog(Dialog dialog) {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
@@ -74,9 +80,40 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        openAndQueryDb(0); // first query for inbox tab
-        initializeComponents();
+      //  openAndQueryDb(0); // first query for inbox tab
+//       FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
+        // Initialize Firebase Auth
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mUsername = ANONYMOUS;
+
+        // Check if authenticated
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    onSignedInInitialize(user.getDisplayName());
+                    initializeComponents();
+                } else {
+                    // User is signed out
+                    onSignedOutCleanup();
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+                                    .setAvailableProviders(
+                                            Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                                          new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+            }
+        };
+
+     //   loadList(0);
         // If the layout on activity_main.xml in the folder layout-sw600dp is not null,
         // we are in Dual Pane mode and activate the fragment
         if (findViewById(R.id.details_linear_layout) != null) {
@@ -93,14 +130,52 @@ public class MainActivity extends AppCompatActivity {
             mTwoPane = false;
         }
 
+
     }
 
-    private void initializeComponents() {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // Sign-in succeeded, set up the UI
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // Sign in was canceled by the user, finish the activity
+                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mAuthStateListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        }
+    }
+
+    private void onSignedInInitialize(String username) {
+        mUsername = username;
+
+    }
+
+    private void onSignedOutCleanup() {
+        mUsername = ANONYMOUS;
+
+    }
+
+    private void initializeComponents()  {
         updateDatabase = new UpdateDatabase();
         ButterKnife.bind(this);
 
-        // Instantiate a new UpdateFirebase class
-        updateFirebase = new UpdateFirebase();
 
         // set the pager adapter. More info look in 3rd party library document
         pager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
@@ -108,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
         tabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
@@ -115,13 +191,18 @@ public class MainActivity extends AppCompatActivity {
                 // if user go to another tab change color, change image and query from database to match
                 descriptImage.setImageResource(IMAGES[position]);
                 changeColor(position);
-                openAndQueryDb(position);
+                System.out.println("current page "+ position);
+             //   openAndQueryDb(position);
+           //     loadList(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+        pager.setCurrentItem(0);
+        changeColor(0);
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,25 +213,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        descriptImage.setFactory(new ViewSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                // set props for image switcher
-                ImageView imgview = new ImageView(getApplicationContext());
-                imgview.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                return imgview;
-            }
-        });
+
+
+
+         /*   descriptImage.setFactory(new ViewSwitcher.ViewFactory() {
+                @Override
+                public View makeView() {
+                    // set props for image switcher
+                    ImageView imgview = new ImageView(getApplicationContext());
+                    imgview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    return imgview;
+                }
+            });
+*/
         // Photo flies in and out
         Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
         Animation out = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
-        descriptImage.setInAnimation(in);
-        descriptImage.setOutAnimation(out);
+      /*  descriptImage.setInAnimation(in);
+        descriptImage.setOutAnimation(out);*/
         descriptImage.setImageResource(IMAGES[0]); // first start render
     }
 
+
+
+
     // this function open and query todoitems from database
-    private void openAndQueryDb(final int mPage) {
+/*    private void openAndQueryDb(final int mPage) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
@@ -244,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
         }.execute();
-    }
+    }*/
 
     private void changeColor(int position) {
         switch (position) {
@@ -304,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
                                 updateDatabase.removeAllDoneItem(MainActivity.this);
 
                                 // Delete checked items from Firebase Database
+                                updateFirebase = new UpdateFirebase();
                                 updateFirebase.deleteChecked();
 
                                 Toast.makeText(MainActivity.this, R.string.deleted_all_task, Toast.LENGTH_SHORT).show();
@@ -319,6 +408,9 @@ public class MainActivity extends AppCompatActivity {
                         }).create();
                 alertDialog.show();
                 doKeepDialog(alertDialog);
+                return true;
+            case R.id.sign_out_menu:
+                AuthUI.getInstance().signOut(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

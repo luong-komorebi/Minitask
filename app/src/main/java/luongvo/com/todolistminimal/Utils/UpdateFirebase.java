@@ -1,5 +1,7 @@
 package luongvo.com.todolistminimal.Utils;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,10 +19,15 @@ import luongvo.com.todolistminimal.ToDoItem;
 public class UpdateFirebase {
 
     // Get a reference to the Database
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("toDoItems");
+    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private String uid = firebaseUser.getUid();
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
+
+    public UpdateFirebase(){}
 
     // This method add a new item to Firebase Database
     public void addItem(ToDoItem toDoItem) {
+        System.out.println("user " + uid);
         String itemId = databaseReference.push().getKey();
         System.out.println(itemId);
         databaseReference.child(itemId).setValue(toDoItem);
@@ -30,6 +37,7 @@ public class UpdateFirebase {
     // This method delete an item from Firebase Database
     public void deleteItem(final ToDoItem toDoItem) {
         String id = toDoItem.getItemId();
+        System.out.println("the id is: " + id);
         databaseReference.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

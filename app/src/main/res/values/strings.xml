@@ -39,4 +39,9 @@
 
     <string name="click_item">Click an item</string>
 
+    <string name="facebook_app_id">298382557233568</string>
+    <string name="fb_login_protocol_scheme">fb298382557233568</string>
+
+    <string name="sign_out">Sign Out</string>
+
 </resources>

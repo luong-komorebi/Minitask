@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import luongvo.com.todolistminimal.PageFragment;
+import luongvo.com.todolistminimal.TodayFragment;
+import luongvo.com.todolistminimal.WeekFragment;
 
 /**
  * Created by luongvo on 18/07/2017.
@@ -22,11 +24,14 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return PageFragment.newInstance(0);
+                PageFragment pageFragment = new PageFragment();
+                return pageFragment;
             case 1:
-                return PageFragment.newInstance(1);
+                TodayFragment todayFragment =  new TodayFragment();
+                return todayFragment;
             case 2:
-                return PageFragment.newInstance(2);
+                WeekFragment weekFragment = new WeekFragment();
+                return weekFragment;
             default:
                 return null;
         }

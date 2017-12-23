@@ -36,7 +36,7 @@ public class DetailFragment extends Fragment {
     @BindView(R.id.deleteTodoBtn)
     FloatingActionButton deleteTodo;
 
-    String content = "Click";
+    String content;
     String reminder;
     Boolean hasReminder = true;
     Boolean done = false;
@@ -83,7 +83,7 @@ public class DetailFragment extends Fragment {
                 hasReminder = bundle.getBoolean("hasReminder");
                 done = bundle.getBoolean("done");
                 mItemId = bundle.getString("itemId");
-                System.out.println("passed: " + content);
+                System.out.println("id in detail fragment: " + mItemId);
             }
         }
 
@@ -93,8 +93,7 @@ public class DetailFragment extends Fragment {
         updateDatabase = new UpdateDatabase();
         dateTimeUtils = new MyDateTimeUtils();
 
-        // Instantiate a new UpdateFirebase class
-        updateFirebase = new UpdateFirebase();
+
 
         assignComponents();
 
@@ -138,6 +137,8 @@ public class DetailFragment extends Fragment {
                     dateTimeUtils.cancelScheduledNotification(dateTimeUtils.getNotification(content, getContext()),
                             getContext(), (int) oldRowId);
 
+                // Instantiate a new UpdateFirebase class
+                updateFirebase = new UpdateFirebase();
                 // **New** Delete the item from Firebase Database
                 updateFirebase.deleteItem(toDoItem);
                 getActivity().finish();
