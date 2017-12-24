@@ -13,17 +13,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.Calendar;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -176,9 +171,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
 
                     // Call the method to delete the item from Firebase
                   //  updateFirebase.deleteItem(toDoItem);
-                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    String uid = firebaseUser.getUid();
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
+
                     String newContent = materialTextInput.getText().toString();
                     String newReminderDate = date + " " + time;
                     boolean newHasReminder;
@@ -187,12 +180,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                     } else {
                         newHasReminder = true;
                     }
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put("content", newContent);
-                    map.put("hasReminder", newHasReminder);
-                    map.put("reminderDate", newReminderDate);
-
-                    databaseReference.child(oldItemId).updateChildren(map);
+                    updateFirebase.updateItem(newContent, newHasReminder, newReminderDate, oldItemId);
           } else {
                     addItemToDatabase();
                 }

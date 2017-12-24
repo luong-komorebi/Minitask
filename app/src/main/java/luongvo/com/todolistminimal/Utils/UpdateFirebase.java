@@ -9,6 +9,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 import luongvo.com.todolistminimal.ToDoItem;
 
 /**
@@ -34,9 +36,16 @@ public class UpdateFirebase {
         toDoItem.setItemId(itemId);
     }
 
-    public void updateItem() {
+    public void updateItem(String newContent, boolean newHasReminder, String newReminderDate, String oldItemId) {
 
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("content", newContent);
+        map.put("hasReminder", newHasReminder);
+        map.put("reminderDate", newReminderDate);
+
+        databaseReference.child(oldItemId).updateChildren(map);
     }
+
     // This method delete an item from Firebase Database
     public void deleteItem(final ToDoItem toDoItem) {
         String id = toDoItem.getItemId();

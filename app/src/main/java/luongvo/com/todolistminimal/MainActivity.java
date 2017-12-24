@@ -81,7 +81,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
       //  openAndQueryDb(0); // first query for inbox tab
-//       FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+      /*  try{
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }catch (Exception e){
+            e.printStackTrace();
+        }*/
 
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
