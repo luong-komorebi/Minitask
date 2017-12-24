@@ -44,6 +44,8 @@ public class TodayFragment extends Fragment {
     FirebaseRecyclerAdapter  mFirebaseAdapter;
     private View view;
 
+    private Toast mToast;
+
     Date today;
     String day;
     String myDay;
@@ -104,7 +106,7 @@ public class TodayFragment extends Fragment {
 
             @Override
             protected void onBindViewHolder(final FirebaseViewHolder viewHolder, final int position, final ToDoItem toDoItem) {
-
+                boolean hasReminder = toDoItem.getHasReminder();
                 Calendar calendar = Calendar.getInstance();
                 today = calendar.getTime();
                 SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -116,7 +118,7 @@ public class TodayFragment extends Fragment {
                     System.out.println("complete " + day);
                 }
 
-                if (myDay.equals(day)) {
+                if (hasReminder && myDay.equals(day)) {
                     boolean todayB = true;
                     System.out.println("today "+ todayB);
                     System.out.println("today is: "+  today);
@@ -201,7 +203,12 @@ public class TodayFragment extends Fragment {
 
                         @Override
                         public void onItemLongClick(View view, int position) {
-                            Toast.makeText(getActivity(), "Item clicked at " + position, Toast.LENGTH_SHORT).show();
+                            if (mToast != null) {
+                                mToast.cancel();
+                            }
+                                String reminder = toDoItem.getReminderDate();
+                                 mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.reminder_info) + ": " + reminder, Toast.LENGTH_LONG);
+                                 mToast.show();
                         }
                     });
 

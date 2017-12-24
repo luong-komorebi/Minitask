@@ -52,6 +52,8 @@ public class PageFragment extends Fragment {
 
     FirebaseRecyclerAdapter  mFirebaseAdapter;
 
+    private Toast mToast;
+
 
     // each tab is a fragment. this function make a new instance of each when view created.
     public static PageFragment newInstance(int page) {
@@ -282,7 +284,18 @@ public class PageFragment extends Fragment {
 
                     @Override
                     public void onItemLongClick(View view, int position) {
-                        Toast.makeText(getActivity(), "Item clicked at " + position, Toast.LENGTH_SHORT).show();
+                        if (mToast != null) {
+                            mToast.cancel();
+                        }
+                        boolean hasReminder = toDoItem.getHasReminder();
+                        if (hasReminder) {
+                            String reminder = toDoItem.getReminderDate();
+                            mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.reminder_info) + ": " + reminder, Toast.LENGTH_SHORT);
+                            mToast.show();
+                        } else {
+                            mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.no_reminder), Toast.LENGTH_SHORT);
+                            mToast.show();
+                        }
                     }
                 });
             }

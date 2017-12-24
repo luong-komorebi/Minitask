@@ -13,12 +13,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -153,22 +158,44 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                 // get content input from user
                 content = materialTextInput.getText().toString();
                 // no error found, start adding to database
-                addItemToDatabase();
+
                 // this check is used for update/edit a todoItem case
                 // basically, after insert a new one, delete the old one, like trigger in database.
                 if (existingData) {
                   //  UpdateDatabase updateDatabaseInstance = new UpdateDatabase();
                     // remove in database
                  //   oldRowId = updateDatabaseInstance.removeInDatabase(oldContent, oldReminder, oldItemId, AddTodoItem.this);
-                    ToDoItem toDoItem = new ToDoItem(oldContent, oldDone, oldReminder, oldHasReminder, oldItemId);
+
+                   // ToDoItem toDoItem = new ToDoItem(oldContent, oldDone, oldReminder, oldHasReminder, oldItemId);
+
                    // toDoItems.remove(toDoItem);
+
                     // remove existing scheduled notification
-                    dateTimeUtils.cancelScheduledNotification(dateTimeUtils.getNotification(oldContent, AddTodoItem.this),
-                            AddTodoItem.this, (int) oldRowId);
+                  //  dateTimeUtils.cancelScheduledNotification(dateTimeUtils.getNotification(oldContent, AddTodoItem.this),
+                   //         AddTodoItem.this, (int) oldRowId);
 
                     // Call the method to delete the item from Firebase
-                    updateFirebase.deleteItem(toDoItem);
-          }
+                  //  updateFirebase.deleteItem(toDoItem);
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    String uid = firebaseUser.getUid();
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
+                    String newContent = materialTextInput.getText().toString();
+                    String newReminderDate = date + " " + time;
+                    boolean newHasReminder;
+                    if (newReminderDate.equals(" ")) {
+                        newHasReminder = false;
+                    } else {
+                        newHasReminder = true;
+                    }
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("content", newContent);
+                    map.put("hasReminder", newHasReminder);
+                    map.put("reminderDate", newReminderDate);
+
+                    databaseReference.child(oldItemId).updateChildren(map);
+          } else {
+                    addItemToDatabase();
+                }
 
 
                 // schedule a notification if date and time is set
@@ -263,7 +290,8 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
             toDoItem = new ToDoItem(content, false, reminderDate, true, mItemId);
 
         // Add the new item to Firebase Database
-        updateFirebase.addItem(toDoItem);
+       updateFirebase.addItem(toDoItem);
+
 
         // After pushing the item to Firebase, get the Id to store in SQLite also
         String key = toDoItem.getItemId();

@@ -28,4 +28,6 @@
     <string name="delete_all_message">Sei sicuro di voler eliminare tutti i compiti selezionati?</string>
     <string name="deleted_all_task">Compiti selezionati eliminati</string>
     <string name="click_item">Clicca su un compito</string>
+    <string name="today">OGGI</string>
+    <string name="next_7_days">7 GIORNI</string>
 </resources>

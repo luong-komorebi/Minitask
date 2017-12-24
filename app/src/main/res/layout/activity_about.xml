@@ -43,9 +43,26 @@
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
             android:gravity="center"
-            android:text="@string/made_by"
+            android:text="@string/author"
             android:textColor="@android:color/black"
             android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/initial_idea"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:text="@string/original_author"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -63,7 +80,7 @@
             android:layout_margin="5dp"
             android:orientation="horizontal">
 
-            <ImageView
+        <!--    <ImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
@@ -79,6 +96,32 @@
                 android:gravity="left|start"
                 android:linksClickable="true"
                 android:text="@string/my_email"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="18sp" />-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="27dp"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="0.5"
+                android:scaleType="fitEnd"
+                android:src="@drawable/ic_github" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:autoLink="web"
+                android:gravity="left|start|center"
+                android:linksClickable="true"
+                android:text="@string/github_redlor"
                 android:textColorLink="@color/colorPrimaryDark"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -109,57 +152,6 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="0.5"
-                android:scaleType="fitEnd"
-                android:src="@drawable/ic_twitter" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:autoLink="web"
-                android:gravity="left|start"
-                android:linksClickable="true"
-                android:text="@string/twitter_acc"
-                android:textColorLink="@color/colorPrimaryDark"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="0.5"
-                android:scaleType="fitEnd"
-                android:src="@drawable/ic_facebook" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:autoLink="web"
-                android:gravity="left|start"
-                android:linksClickable="true"
-                android:text="@string/facebook_acc"
-                android:textColorLink="@color/colorPrimaryDark"
-                android:textSize="18sp" />
-        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -170,6 +162,32 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="italic" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="26dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="0.5"
+                android:scaleType="fitEnd"
+                android:src="@drawable/ic_paypal" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:autoLink="web"
+                android:gravity="left|start"
+                android:linksClickable="true"
+                android:text="@string/paypal_acc"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

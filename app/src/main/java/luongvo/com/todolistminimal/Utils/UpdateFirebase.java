@@ -34,6 +34,9 @@ public class UpdateFirebase {
         toDoItem.setItemId(itemId);
     }
 
+    public void updateItem() {
+
+    }
     // This method delete an item from Firebase Database
     public void deleteItem(final ToDoItem toDoItem) {
         String id = toDoItem.getItemId();

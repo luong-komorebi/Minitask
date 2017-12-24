@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // set the pager adapter. More info look in 3rd party library document
-        pager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
+        pager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), this));
         tabStrip.setViewPager(pager);
         tabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

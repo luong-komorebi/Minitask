@@ -47,10 +47,11 @@ public class WeekFragment extends Fragment {
 
     private View view;
 
+    private Toast mToast;
+
     Date week;
     Date itemDate;
-    String day = "2019-01-01";
-    String myDay;
+
 
 
     public static WeekFragment newInstance(int page) {
@@ -155,7 +156,7 @@ public class WeekFragment extends Fragment {
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
                             final String id = mFirebaseAdapter.getRef(position).getKey();
-                            System.out.println("id " + id);
+
 
                             if (b) {
                                 toDoItem.setDone(true);
@@ -214,7 +215,12 @@ public class WeekFragment extends Fragment {
 
                         @Override
                         public void onItemLongClick(View view, int position) {
-                            Toast.makeText(getActivity(), "Item clicked at " + position, Toast.LENGTH_SHORT).show();
+                            if (mToast != null) {
+                                mToast.cancel();
+                            }
+                            String reminder = toDoItem.getReminderDate();
+                            mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.reminder_info) + ": " + reminder, Toast.LENGTH_LONG);
+                            mToast.show();
                         }
                     });
 
