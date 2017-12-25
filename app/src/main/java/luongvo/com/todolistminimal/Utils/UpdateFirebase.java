@@ -25,10 +25,12 @@ public class UpdateFirebase {
     private String uid = firebaseUser.getUid();
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
 
+
     public UpdateFirebase(){}
 
     // This method add a new item to Firebase Database
     public void addItem(ToDoItem toDoItem) {
+        databaseReference.keepSynced(true);
         System.out.println("user " + uid);
         String itemId = databaseReference.push().getKey();
         System.out.println(itemId);
@@ -37,6 +39,7 @@ public class UpdateFirebase {
     }
 
     public void updateItem(String newContent, boolean newHasReminder, String newReminderDate, String oldItemId) {
+        databaseReference.keepSynced(true);
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("content", newContent);
@@ -48,6 +51,8 @@ public class UpdateFirebase {
 
     // This method delete an item from Firebase Database
     public void deleteItem(final ToDoItem toDoItem) {
+        databaseReference.keepSynced(true);
+
         String id = toDoItem.getItemId();
         System.out.println("the id is: " + id);
         databaseReference.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -67,6 +72,8 @@ public class UpdateFirebase {
 
     // This method delete all the checked items from Firebase
     public void deleteChecked() {
+        databaseReference.keepSynced(true);
+
         Query query = databaseReference.orderByChild("done").equalTo(true);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

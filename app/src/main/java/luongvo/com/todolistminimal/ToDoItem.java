@@ -29,7 +29,7 @@ public class ToDoItem implements Serializable {
 
   public ToDoItem() {}
 
-    // New cionstrucotr with Firebase Id variable
+    // New constructor with Firebase Id variable
     public ToDoItem(String content, boolean done, String reminderDate, boolean hasReminder, String itemId) {
         this.content = content;
         this.done = done;
@@ -70,17 +70,6 @@ public class ToDoItem implements Serializable {
     public void setItemId(String mItemId) {
         this.mItemId = mItemId;
     }
-
-    // this serves logging.
-//    @Override
-//    public String toString() {
-//        return "ToDoItem{" +
-//                "content='" + content + '\'' +
-//                ", done=" + done +
-//                ", reminderDate='" + reminderDate + '\'' +
-//                ", hasReminder=" + hasReminder +
-//                '}';
-//    }
 
     // compare object for remove from array list
     @Override

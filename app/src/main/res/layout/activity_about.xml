@@ -62,7 +62,7 @@
             android:gravity="center"
             android:text="@string/original_author"
             android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -184,6 +184,32 @@
                 android:autoLink="web"
                 android:gravity="left|start"
                 android:linksClickable="true"
+                android:text="@string/paypal_redlor"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="26dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="0.5"
+                android:scaleType="fitEnd"
+                android:src="@drawable/ic_paypal" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:autoLink="web"
+                android:gravity="left|start"
+                android:linksClickable="true"
                 android:text="@string/paypal_acc"
                 android:textColorLink="@color/colorPrimaryDark"
                 android:textSize="18sp" />
@@ -215,30 +241,6 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="26dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="0.5"
-                android:scaleType="fitEnd"
-                android:src="@drawable/ic_paypal" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:autoLink="web"
-                android:gravity="left|start"
-                android:linksClickable="true"
-                android:text="@string/paypal_acc"
-                android:textColorLink="@color/colorPrimaryDark"
-                android:textSize="18sp" />
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>

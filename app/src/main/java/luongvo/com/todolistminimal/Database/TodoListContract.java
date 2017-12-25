@@ -17,7 +17,6 @@ public final class TodoListContract {
         public static final String COLUMN_NAME_CONTENT = "content";
         public static final String COLUMN_NAME_DONE = "done";
         public static final String COLUMN_NAME_REMINDERDATE = "reminderdate";
-        // Added a column to store Firebase Id in SQLite. Redlor
         public static final String COLUMN_NAME_ID = "itemid";
     }
 }

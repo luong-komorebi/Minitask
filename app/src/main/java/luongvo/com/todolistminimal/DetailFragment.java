@@ -14,10 +14,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
-import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 import luongvo.com.todolistminimal.Utils.UpdateFirebase;
-
-import static luongvo.com.todolistminimal.PageFragment.toDoItems;
 
 /**
  * Created by Redlor on 26/11/2017.
@@ -41,22 +38,19 @@ public class DetailFragment extends Fragment {
     Boolean hasReminder = true;
     Boolean done = false;
     String mItemId;
-    UpdateDatabase updateDatabase; // util to do update stuffs in db
+
     MyDateTimeUtils dateTimeUtils; // util to do stuffs with notification
 
     // Declare the class with Firebase methods
     UpdateFirebase updateFirebase;
 
     ToDoItem currentToDoItem;
-
-
     private long oldRowId;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the fragment
      */
-    public DetailFragment() {
-    }
+    public DetailFragment() {}
 
     @Nullable
     @Override
@@ -73,7 +67,7 @@ public class DetailFragment extends Fragment {
             done = savedInstanceState.getBoolean("currentDone");
             mItemId = savedInstanceState.getString("currentItemId");
 
-            // Otherwise get the data from teh DetailActivity
+            // Otherwise get the data from the DetailActivity
         } else {
             Bundle bundle = new Bundle();
             bundle = getArguments();
@@ -90,11 +84,7 @@ public class DetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, rootView);
 
-        updateDatabase = new UpdateDatabase();
         dateTimeUtils = new MyDateTimeUtils();
-
-
-
         assignComponents();
 
         return rootView;
@@ -104,50 +94,55 @@ public class DetailFragment extends Fragment {
     private void assignComponents() {
         // update UI with the content taken from intent
         todoInfo.setText(content);
+
         if (hasReminder)
             reminderInfo.setText(reminder);
         else reminderInfo.setText(getString(R.string.not_found));
         // if edit button is press fire add activity with a little tweak
-        editTodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddTodoItem.class);
-                intent.putExtra("item", currentToDoItem);
-                intent.putExtra("content", content);
-                intent.putExtra("reminder", reminder);
-                intent.putExtra("hasReminder", hasReminder);
-                intent.putExtra("done", done);
-                intent.putExtra("id", mItemId);
-                getActivity().finish();
-                startActivity(intent);
-            }
-        });
 
-        // if delete is pressed then delete item in database and also remove object for notifydatsetchanged
-        deleteTodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), getString(R.string.item_deleted), Toast.LENGTH_SHORT).show();
-                ToDoItem toDoItem = new ToDoItem(content, done, reminder, hasReminder, mItemId);
-                toDoItems.remove(toDoItem);
-                // remove in database
-                oldRowId = updateDatabase.removeInDatabase(content, reminder, mItemId, getContext());
-                // remove existing scheduled notification if existed
-                if (!reminder.equals(" "))
-                    dateTimeUtils.cancelScheduledNotification(dateTimeUtils.getNotification(content, getContext()),
-                            getContext(), (int) oldRowId);
+        if (content == null) {
+            deleteTodo.setClickable(false);
+            editTodo.setClickable(false);
+        } else {
+            // if delete is pressed then delete item in database and also remove object for notifydatsetchanged
+            deleteTodo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), getString(R.string.item_deleted), Toast.LENGTH_SHORT).show();
+                    ToDoItem toDoItem = new ToDoItem(content, done, reminder, hasReminder, mItemId);
 
-                // Instantiate a new UpdateFirebase class
-                updateFirebase = new UpdateFirebase();
-                // **New** Delete the item from Firebase Database
-                updateFirebase.deleteItem(toDoItem);
-                getActivity().finish();
+                    // remove existing scheduled notification if existed
+                    if (!reminder.equals(" "))
+                        dateTimeUtils.cancelScheduledNotification(dateTimeUtils.getNotification(content, getContext()),
+                                getContext(), (int) oldRowId);
 
-                // This intent is for the dual pane mode, to refresh the UI
-                getActivity().startActivity(new Intent(v.getContext(), MainActivity.class));
-                getActivity().overridePendingTransition(0, 0);
-            }
-        });
+                    // Instantiate a new UpdateFirebase class
+                    updateFirebase = new UpdateFirebase();
+                    // **New** Delete the item from Firebase Database
+                    updateFirebase.deleteItem(toDoItem);
+                    getActivity().finish();
+
+                    // This intent is for the dual pane mode, to refresh the UI
+                    getActivity().startActivity(new Intent(v.getContext(), MainActivity.class));
+                    getActivity().overridePendingTransition(0, 0);
+                }
+            });
+
+            editTodo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), AddTodoItem.class);
+                    intent.putExtra("item", currentToDoItem);
+                    intent.putExtra("content", content);
+                    intent.putExtra("reminder", reminder);
+                    intent.putExtra("hasReminder", hasReminder);
+                    intent.putExtra("done", done);
+                    intent.putExtra("id", mItemId);
+                    getActivity().finish();
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     // Save the current state
@@ -158,7 +153,7 @@ public class DetailFragment extends Fragment {
         currentState.putBoolean("currenthasReminder", hasReminder);
         currentState.putBoolean("currentDone", done);
         currentState.putString("currentItemId", mItemId);
-        System.out.println("onSaveInstanceState is called");
+
     }
 
 

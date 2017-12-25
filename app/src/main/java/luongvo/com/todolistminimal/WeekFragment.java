@@ -40,7 +40,6 @@ import static luongvo.com.todolistminimal.MainActivity.mTwoPane;
 
 public class WeekFragment extends Fragment {
 
-    private static final String ARG_PAGE = "ARG_PAGE";
     DatabaseReference mDatabaseReference;
     private RecyclerView mRecyclerView;
     FirebaseRecyclerAdapter  mFirebaseAdapter;
@@ -52,16 +51,6 @@ public class WeekFragment extends Fragment {
     Date week;
     Date itemDate;
 
-
-
-    public static WeekFragment newInstance(int page) {
-        Bundle args = new Bundle();
-        // get int to decide what page to render.
-   //     args.putInt(ARG_PAGE, page);
-        WeekFragment fragment = new WeekFragment();
-     //   fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,7 +74,7 @@ public class WeekFragment extends Fragment {
         final  String uid = firebaseUser.getUid();
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
-
+        mDatabaseReference.keepSynced(true);
 
         final Query query = FirebaseDatabase.getInstance()
                 .getReference("users")
@@ -164,16 +153,12 @@ public class WeekFragment extends Fragment {
                                 map.put("done", true);
                                 mDatabaseReference.child(id).updateChildren(map);
                                 viewHolder.checkDone.setOnCheckedChangeListener(null);
-                                // mDatabaseReference.child(id).setValue(toDoItem);
-                                //   mFirebaseAdapter.notifyDataSetChanged();
-                                //     mDatabaseReference.child(id).child("done").setValue(true);
                             } else {
                                 toDoItem.setDone(false);
                                 HashMap<String, Object> map = new HashMap<>();
                                 map.put("done", false);
                                 mDatabaseReference.child(id).updateChildren(map);
                                 viewHolder.checkDone.setOnCheckedChangeListener(null);
-
                             }
 
                         }
@@ -219,7 +204,7 @@ public class WeekFragment extends Fragment {
                                 mToast.cancel();
                             }
                             String reminder = toDoItem.getReminderDate();
-                            mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.reminder_info) + ": " + reminder, Toast.LENGTH_LONG);
+                            mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.reminder_info) + " " + reminder, Toast.LENGTH_LONG);
                             mToast.show();
                         }
                     });

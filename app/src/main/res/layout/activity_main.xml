@@ -19,12 +19,10 @@
 -->
 
         <ImageView
-            android:id="@+id/descriptImage"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:scaleType="centerCrop"
-            tools:scr= "@drawable/today"
-            android:contentDescription="image" />
+            android:id="@+id/tabImage"
+            android:scaleType="centerCrop"/>
 
         <com.astuetz.PagerSlidingTabStrip
             android:id="@+id/tabs"

@@ -23,48 +23,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import luongvo.com.todolistminimal.Adapters.RecyclerViewAdapter;
 import luongvo.com.todolistminimal.Utils.SimpleDividerItemDecoration;
 import luongvo.com.todolistminimal.viewholder.FirebaseViewHolder;
 
 import static luongvo.com.todolistminimal.MainActivity.mTwoPane;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PageFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PageFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class PageFragment extends Fragment {
 
-    private static final String ARG_PAGE = "ARG_PAGE";
 
     DatabaseReference mDatabaseReference;
     private RecyclerView mRecyclerView;
-    private RecyclerViewAdapter mAdapter;
-    public static ArrayList<ToDoItem> toDoItems;
-    private View view;
-
     FirebaseRecyclerAdapter  mFirebaseAdapter;
 
+    private View view;
+
     private Toast mToast;
-
-
-    // each tab is a fragment. this function make a new instance of each when view created.
-    public static PageFragment newInstance(int page) {
-        Bundle args = new Bundle();
-        // get int to decide what page to render.
-   //     args.putInt(ARG_PAGE, page);
-        PageFragment fragment = new PageFragment();
-     //   fragment.setArguments(args);
-        return fragment;
-    }
-
 
 
     @Override
@@ -73,13 +49,11 @@ public class PageFragment extends Fragment {
 
             }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // inflate the tab view with these fragments
         view = inflater.inflate(R.layout.fragment_page, container, false);
-
      return view;
     }
 
@@ -88,11 +62,11 @@ public class PageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         System.out.println(mTwoPane);
-            //    toDoItems = new ArrayList<>();
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = firebaseUser.getUid();
 
                 mDatabaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
+                mDatabaseReference.keepSynced(true);
                 final Query query = FirebaseDatabase.getInstance()
                         .getReference("users")
                         .child(uid)
@@ -103,8 +77,6 @@ public class PageFragment extends Fragment {
                         new FirebaseRecyclerOptions.Builder<ToDoItem>()
                                 .setQuery(query, ToDoItem.class)
                                 .build();
-
-// mDatabaseReference.keepSynced(true);
 
                 mFirebaseAdapter = new FirebaseRecyclerAdapter<ToDoItem, FirebaseViewHolder> (options
                 ) {
@@ -148,9 +120,6 @@ public class PageFragment extends Fragment {
                             map.put("done", true);
                             mDatabaseReference.child(id).updateChildren(map);
                             viewHolder.checkDone.setOnCheckedChangeListener(null);
-                            // mDatabaseReference.child(id).setValue(toDoItem);
-                            //   mFirebaseAdapter.notifyDataSetChanged();
-                            //     mDatabaseReference.child(id).child("done").setValue(true);
                         }
                         else {
                             toDoItem.setDone(false);
@@ -158,93 +127,7 @@ public class PageFragment extends Fragment {
                             map.put("done", false);
                             mDatabaseReference.child(id).updateChildren(map);
                             viewHolder.checkDone.setOnCheckedChangeListener(null);
-
                         }
-                           /* HashMap<String, Object> map = new HashMap<>();
-                            map.put("done", false);
-                            mDatabaseReference.child(id).updateChildren(map);*/
-                        // mFirebaseAdapter.notifyDataSetChanged();
-                        //  mDatabaseReference.child(id).setValue(toDoItem);
-                        //   mDatabaseReference.child(id).child("done").setValue(false);
-
-
-                      /*  if (b) {
-                            doneQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    String key = dataSnapshot.getKey();
-                                    System.out.println("chiave " + key);
-                                    //    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                                    if (key.equals(id)) {
-                                        mDatabaseReference.child(id).child("done").setValue(true);
-                                        doneQuery.removeEventListener(this);
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        } else {
-                            doneQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    String key = dataSnapshot.getKey();
-                                    System.out.println("chiave " + key);
-                                    //    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                                    if (key.equals(id)) {
-                                        mDatabaseReference.child(id).child("done").setValue(false);
-                                        doneQuery.removeEventListener(this);
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                            }
-*/
-
-
-
-                                /*addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Toast.makeText(getActivity(), "Item clicked at " + position, Toast.LENGTH_SHORT).show();
-                                    String id = mFirebaseAdapter.getRef(position).getKey();
-                                    System.out.println("id "+ id);
-                                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                        if (dataSnapshot1.getRef().getKey().equals(id)) {
-                                            System.out.println("datasnap "+ dataSnapshot1.getRef().getKey());
-                                            if (b) {
-                                             //   toDoItem.setDone(true);
-                                           //     viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                                                mDatabaseReference.child(id).child("done").setValue(true);
-                                                query.removeEventListener(this);
-                                            } else {
-                                            //    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                                              //  toDoItem.setDone(false);
-                                                mDatabaseReference.child(id).child("done").setValue(false);
-                                                query.removeEventListener(this);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-*/
-                        // mDatabaseReference.addListenerForSingleValueEvent(valueEventListener);
-
-
-                         /*   String key = mFirebaseAdapter.getRef(position).getKey();
-                            mDatabaseReference.child(key).child("done").setValue(true);
-                            System.out.println("chiave "+ key);*/
                     }
                 });
 
@@ -290,7 +173,7 @@ public class PageFragment extends Fragment {
                         boolean hasReminder = toDoItem.getHasReminder();
                         if (hasReminder) {
                             String reminder = toDoItem.getReminderDate();
-                            mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.reminder_info) + ": " + reminder, Toast.LENGTH_SHORT);
+                            mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.reminder_info) + " " + reminder, Toast.LENGTH_SHORT);
                             mToast.show();
                         } else {
                             mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.no_reminder), Toast.LENGTH_SHORT);
@@ -301,180 +184,10 @@ public class PageFragment extends Fragment {
             }
         };
 
-
         mRecyclerView = (RecyclerView) view.findViewById(R.id.to_do_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         mRecyclerView.setAdapter(mFirebaseAdapter);
-
-
-
-
-      /*  mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //    toDoItems.clear();
-                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    ToDoItem toDoItem = dsp.getValue (ToDoItem.class);
-                    toDoItems.add(toDoItem);
-                    System.out.println("called page fragment");
-                    System.out.println("list" + toDoItems);
-                }
-                mRecyclerView = (RecyclerView) view.findViewById(R.id.to_do_list);
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-
-
-
-                mAdapter = new RecyclerViewAdapter(getContext(), R.layout.todo_item, toDoItems,
-                        new RecyclerViewAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(ToDoItem toDoItem) {
-                                if (mTwoPane) {
-                                    DetailFragment newDetailFragment = new DetailFragment();
-                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("content", toDoItem.getContent());
-                                    bundle.putString("reminder", toDoItem.getReminderDate());
-                                    bundle.putBoolean("hasReminder", toDoItem.getHasReminder());
-                                    bundle.putBoolean("done", toDoItem.getDone());
-                                    bundle.putString("itemId", toDoItem.getItemId());
-                                    newDetailFragment.setArguments(bundle);
-
-                                    fragmentManager.beginTransaction()
-                                            .replace(R.id.details_container, newDetailFragment)
-                                            .detach(newDetailFragment)
-                                            .attach(newDetailFragment)
-                                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                            .commit();
-                                } else {
-                                    Intent intent = new Intent(getContext(), DetailActivity.class);
-                                    intent.putExtra("content", toDoItem.getContent());
-                                    intent.putExtra("reminder", toDoItem.getReminderDate());
-                                    intent.putExtra("hasReminder", toDoItem.getHasReminder());
-                                    intent.putExtra("done", toDoItem.getDone());
-                                    intent.putExtra("itemId", toDoItem.getItemId());
-                                    startActivity(intent);
-                                }
-                            }
-                        }, new RecyclerViewAdapter.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClicked(final ToDoItem toDoItem) {
-                        // TO DO
-                        return true;
-                    }
-                });
-                mRecyclerView.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
-        });*/
-
-
-
-        // Before
-     /*   fragmentPagerAdapter = new TodoListAdapter(getActivity().getApplicationContext(), R.layout.todo_item, toDoItems);
-        todoList.setAdapter(fragmentPagerAdapter);
-        todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            // open the detail of each item if clicked
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getContext(), DetailTodoItem.class);
-                ToDoItem item = toDoItems.get(position);
-                intent.putExtra("content", item.getContent());
-                intent.putExtra("reminder", item.getReminderDate());
-                intent.putExtra("hasReminder", item.getHasReminder());
-                intent.putExtra("done", item.getDone());
-                startActivity(intent);
-            }
-        });*/
-
-
- /*       mRecyclerView = view.findViewById(R.id.to_do_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-     mAdapter = new RecyclerViewAdapter(getContext(), R.layout.todo_item, toDoItems,
-                new RecyclerViewAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(ToDoItem toDoItem) {
-                        if (mTwoPane) {
-                            DetailFragment newDetailFragment = new DetailFragment();
-                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("content", toDoItem.getContent());
-                            bundle.putString("reminder", toDoItem.getReminderDate());
-                            bundle.putBoolean("hasReminder", toDoItem.getHasReminder());
-                            bundle.putBoolean("done", toDoItem.getDone());
-                            bundle.putString("itemId", toDoItem.getItemId());
-                            newDetailFragment.setArguments(bundle);
-
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.details_container, newDetailFragment)
-                                    .detach(newDetailFragment)
-                                    .attach(newDetailFragment)
-                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                    .commit();
-                        } else {
-                            Intent intent = new Intent(getContext(), DetailActivity.class);
-                            intent.putExtra("content", toDoItem.getContent());
-                            intent.putExtra("reminder", toDoItem.getReminderDate());
-                            intent.putExtra("hasReminder", toDoItem.getHasReminder());
-                            intent.putExtra("done", toDoItem.getDone());
-                            intent.putExtra("itemId", toDoItem.getItemId());
-                            startActivity(intent);
-                        }
-                    }
-                }, new RecyclerViewAdapter.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClicked(final ToDoItem toDoItem) {
-                // TO DO
-                return true;
-            }
-        });
-        mRecyclerView.setAdapter(mAdapter);
-
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference("toDoItems");
-        mDatabaseReference.addChildEventListener( new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-                    try {
-                        ToDoItem toDoItem = dataSnapshot.getValue(ToDoItem.class);
-                        toDoItems.add(toDoItem);
-                        mRecyclerView.scrollToPosition(toDoItems.size() - 1);
-                        mAdapter.notifyItemInserted(toDoItems.size() - 1);
-                    } catch (Exception e) {
-                        Log.e("PageFragment", e.getMessage());
-                    }
-                    mAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                ToDoItem toDoItem = dataSnapshot.getValue(ToDoItem.class);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                ToDoItem toDoItem = dataSnapshot.getValue(ToDoItem.class);
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                ToDoItem toDoItem = dataSnapshot.getValue(ToDoItem.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
 
          }
 
@@ -494,7 +207,6 @@ public class PageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //  fragmentPagerAdapter.notifyDataSetChanged();
     }
 
 
