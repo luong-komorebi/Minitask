@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Minitask</string>
+    <string name="about">O aplikacji</string>
+
+    <string name="cleaning">Czyszczenie...</string>
+    <string name="add_todo_item">Dodaj zadanie</string>
+    <string name="add_todo_item_hint">Twoje zadanie</string>
+    <string name="empty_input">To pole nie może być puste</string>
+    <string name="reminder_or_not">Ustaw przypomnienie</string>
+    <string name="set_date">Ustaw datę</string>
+    <string name="set_time">Ustaw godzinę</string>
+    <string name="reminder_set_at">Ustaw przypomnienie na</string>
+    <string name="reminder_info">Ustawiono przypomnienie:</string>
+    <string name="not_found">Nic tu nie ma!</string>
+    <string name="item_deleted">Usunięto zadanie!</string>
+    <string name="time_error">Podaj godzinę</string>
+    <string name="time_error_purpose">Ustawienie godziny pomoże nam wysłać precyzyjne powiadomienie.</string>
+    <string name="task_to_be_done">Zadania do zrobienia</string>
+    <string name="detail">Detale</string>
+    <string name="clean_all_done">Usuń zrobione zadania</string>
+    <string name="app_version">Wersja 1.0</string>
+    <string name="made_by" translatable="false">Autor: Luong Tran Thanh Vo</string>
+    <string name="contact_me">Kontakt ze mną</string>
+    <string name="support_me">Wspieraj mnie</string>
+    <string name="my_email" translatable="false">thanh.luong.for.fun@gmail.com</string>
+    <string name="github_acc" translatable="false">github.com/LewisVo</string>
+    <string name="twitter_acc" translatable="false">twitter.com/MiracleLuong</string>
+    <string name="facebook_acc" translatable="false">facebook.com/seeknd3stroy</string>
+    <string name="patreon_acc" translatable="false">patreon.com/luongtranthanhvo</string>
+    <string name="paypal_acc" translatable="false">paypal.me/LuongTranThanhVo</string>
+
+    <string name="delete_message">Jesteś pewien, że chcesz usunąc to zadanie?</string>
+    <string name="delete">Usuń</string>
+    <string name="cancel">Anuluj</string>
+    <string name="delete_all_message">Na pewno chcesz usunąć wszystkie zaznaczone zadania?</string>
+    <string name="deleted_all_task">Usunięto zaznaczone zadania</string>
+
+    <string name="click_item">Zaznaczono element</string>
+</resources>
