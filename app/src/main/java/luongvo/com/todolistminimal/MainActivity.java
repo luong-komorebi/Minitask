@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String mUsername;
 
+    private int mCurrentPage;
+
     @BindView(R.id.view_pager)
     ViewPager pager;
     @BindView(R.id.tabs)
@@ -68,7 +70,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      //  openAndQueryDb(0); // first query for inbox tab
+        if (savedInstanceState == null) {
+            mCurrentPage = 0;
+        } else {
+            mCurrentPage = savedInstanceState.getInt("currentPage");
+            System.out.println("restored page: " + mCurrentPage);
+        }
+
        try{
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         }catch (Exception e){
@@ -77,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mUsername = ANONYMOUS;
+        onSignedOutCleanup();
 
         // Check if authenticated
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -121,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mTwoPane = false;
         }
-
 
     }
 
@@ -190,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 // if user go to another tab change color, change image and query from database to match
                 descriptImage.setImageResource(IMAGES[position]);
                 changeColor(position);
+                mCurrentPage = position;
             }
 
             @Override
@@ -197,8 +205,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        pager.setCurrentItem(0);
-        changeColor(0);
+
+        pager.setCurrentItem(mCurrentPage);
+        changeColor(mCurrentPage);
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,6 +248,13 @@ public class MainActivity extends AppCompatActivity {
         tabStrip.setIndicatorColor(Color.parseColor(indicatorColor));
         actionButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(actionBarColor)));
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentPage", mCurrentPage);
+        System.out.println("currentPage: " + mCurrentPage);
     }
 
     // initiates menu options
