@@ -100,9 +100,11 @@ public class WeekFragment extends Fragment {
             @Override
             protected void onBindViewHolder(final FirebaseViewHolder viewHolder, final int position, final ToDoItem toDoItem) {
 
-                Calendar calendar = Calendar.getInstance();
-                Calendar calendar1 = Calendar.getInstance();
-                calendar.add(Calendar.DAY_OF_YEAR, 7);
+                Calendar calendarWeek = Calendar.getInstance();
+                Calendar calendarItem = Calendar.getInstance();
+                Calendar calendarToday = Calendar.getInstance();
+                System.out.println("calendarToday "+  calendarToday);
+                calendarWeek.add(Calendar.DAY_OF_YEAR, 7);
                 SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 String completeTime = toDoItem.getReminderDate();
@@ -113,13 +115,14 @@ public class WeekFragment extends Fragment {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    calendar1.setTime(itemDate);
+                    calendarItem.setTime(itemDate);
                     System.out.println("complete " + completeTime);
                 } else {
-                   calendar1.add(Calendar.DAY_OF_YEAR, 8);
+                    calendarItem.add(Calendar.DAY_OF_YEAR, 8);
                 }
 
-                if (calendar1.before(calendar)) {
+
+                if (calendarItem.after(calendarToday) && calendarItem.before(calendarWeek)) {
                     boolean todayB = true;
                     System.out.println("condition "+ todayB);
                     System.out.println("itemDate is: "+  itemDate);

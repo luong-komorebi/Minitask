@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
+import luongvo.com.todolistminimal.MainActivity;
 import luongvo.com.todolistminimal.ToDoItem;
 
 /**
@@ -24,6 +25,7 @@ public class UpdateFirebase {
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = firebaseUser.getUid();
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
+    MainActivity activity;
 
 
     public UpdateFirebase(){}
@@ -73,7 +75,7 @@ public class UpdateFirebase {
     // This method delete all the checked items from Firebase
     public void deleteChecked() {
         databaseReference.keepSynced(true);
-
+        activity = new MainActivity();
         Query query = databaseReference.orderByChild("done").equalTo(true);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -81,6 +83,7 @@ public class UpdateFirebase {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     dataSnapshot1.getRef().removeValue();
                 }
+
             }
 
             @Override

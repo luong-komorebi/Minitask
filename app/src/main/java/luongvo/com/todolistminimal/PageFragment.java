@@ -61,7 +61,7 @@ public class PageFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        System.out.println(mTwoPane);
+
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = firebaseUser.getUid();
 
