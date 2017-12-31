@@ -21,6 +21,12 @@ Redlor: I am taking on the development of this app from November 2017. The aim i
 ## Contributing  
 PRs and discussions are welcomed. Translation is also appreciated.
 
+Translations:
+
+  Italian: https://github.com/redlor
+  
+  Polish: https://github.com/danielblokus
+
 ## App icon credit
 https://www.flaticon.com/free-icon/startup_341435#term=rocket&page=2&position=33  
 https://www.flaticon.com/free-icon/rocket_122111#term=rocket&page=2&position=62
