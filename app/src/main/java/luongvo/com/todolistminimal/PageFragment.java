@@ -1,6 +1,7 @@
 package luongvo.com.todolistminimal;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,91 +12,138 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-import luongvo.com.todolistminimal.Adapters.RecyclerViewAdapter;
 import luongvo.com.todolistminimal.Utils.SimpleDividerItemDecoration;
+import luongvo.com.todolistminimal.viewholder.FirebaseViewHolder;
 
 import static luongvo.com.todolistminimal.MainActivity.mTwoPane;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PageFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PageFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PageFragment extends Fragment {
 
-    private static final String ARG_PAGE = "ARG_PAGE";
-    public static ArrayList<ToDoItem> toDoItems;
+
     DatabaseReference mDatabaseReference;
     private RecyclerView mRecyclerView;
-    private RecyclerViewAdapter mAdapter;
+    FirebaseRecyclerAdapter  mFirebaseAdapter;
+
     private View view;
 
-    // each tab is a fragment. this function make a new instance of each when view created.
-    public static PageFragment newInstance(int page) {
-        Bundle args = new Bundle();
-        // get int to decide what page to render.
-        args.putInt(ARG_PAGE, page);
-        PageFragment fragment = new PageFragment();
-        fragment.setArguments(args);
-        return fragment;
+    private Toast mToast;
+
+    PassItemsChecked mCallback;
+    public int checkedItems;
+
+    public interface PassItemsChecked {
+        void passChecked(int isChecked);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
 
+            }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // inflate the tab view with these fragments
         view = inflater.inflate(R.layout.fragment_page, container, false);
-        return view;
+     return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Before
-     /*   fragmentPagerAdapter = new TodoListAdapter(getActivity().getApplicationContext(), R.layout.todo_item, toDoItems);
-        todoList.setAdapter(fragmentPagerAdapter);
-        todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            // open the detail of each item if clicked
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getContext(), DetailTodoItem.class);
-                ToDoItem item = toDoItems.get(position);
-                intent.putExtra("content", item.getContent());
-                intent.putExtra("reminder", item.getReminderDate());
-                intent.putExtra("hasReminder", item.getHasReminder());
-                intent.putExtra("done", item.getDone());
-                startActivity(intent);
-            }
-        });*/
 
-        System.out.println(mTwoPane);
 
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = firebaseUser.getUid();
 
-        //After, applying RecyclerView and OnLongItemClickListener
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.to_do_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        mAdapter = new RecyclerViewAdapter(getContext(), R.layout.todo_item, toDoItems,
-                new RecyclerViewAdapter.OnItemClickListener() {
+                mDatabaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
+                mDatabaseReference.keepSynced(true);
+                final Query query = FirebaseDatabase.getInstance()
+                        .getReference("users")
+                        .child(uid)
+                        .child("toDoItems")
+                        .limitToLast(50);
+
+                FirebaseRecyclerOptions<ToDoItem> options =
+                        new FirebaseRecyclerOptions.Builder<ToDoItem>()
+                                .setQuery(query, ToDoItem.class)
+                                .build();
+
+                mFirebaseAdapter = new FirebaseRecyclerAdapter<ToDoItem, FirebaseViewHolder> (options
+                ) {
+
                     @Override
-                    public void onItemClick(ToDoItem toDoItem) {
+                    public FirebaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.todo_item, parent, false);
+                        return new FirebaseViewHolder(view);
+                    }
+
+
+                    @Override
+                    protected void onBindViewHolder(final FirebaseViewHolder viewHolder, final int position, final ToDoItem toDoItem) {
+                        // set the content of the item
+                        viewHolder.content.setText(toDoItem.getContent());
+                        // set the checkbox status of the item
+                        viewHolder.checkDone.setChecked(toDoItem.getDone());
+                        // check if checkbox is checked, then strike through the text
+                        // this is for the first time UI render
+                if (viewHolder.checkDone.isChecked()) {
+                    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }else {
+                    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                // render the clock icon if the item has a reminder
+                if (toDoItem.getHasReminder())
+                    viewHolder.clockReminder.setVisibility(View.VISIBLE);
+                else
+                    viewHolder.clockReminder.setVisibility(View.INVISIBLE);
+
+                viewHolder.checkDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
+                        final String id = mFirebaseAdapter.getRef(position).getKey();
+
+                        if (b) {
+                            toDoItem.setDone(true);
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put("done", true);
+                            mDatabaseReference.child(id).updateChildren(map);
+                            viewHolder.checkDone.setOnCheckedChangeListener(null);
+                     //       checkedItems++;
+                       //     mCallback.passChecked(checkedItems);
+                        }
+                        else {
+                            toDoItem.setDone(false);
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put("done", false);
+                            mDatabaseReference.child(id).updateChildren(map);
+                            viewHolder.checkDone.setOnCheckedChangeListener(null);
+                         //   checkedItems--;
+                         //   mCallback.passChecked(checkedItems);
+                        }
+                    }
+                });
+
+                viewHolder.setOnClickListener(new FirebaseViewHolder.ClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        final String itemId = mFirebaseAdapter.getRef(position).getKey();
                         if (mTwoPane) {
                             DetailFragment newDetailFragment = new DetailFragment();
                             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -104,7 +152,8 @@ public class PageFragment extends Fragment {
                             bundle.putString("reminder", toDoItem.getReminderDate());
                             bundle.putBoolean("hasReminder", toDoItem.getHasReminder());
                             bundle.putBoolean("done", toDoItem.getDone());
-                            bundle.putString("itemId", toDoItem.getItemId());
+                            bundle.putString("itemId", itemId);
+                            System.out.println("id in page fragment: " + itemId);
                             newDetailFragment.setArguments(bundle);
 
                             fragmentManager.beginTransaction()
@@ -119,25 +168,65 @@ public class PageFragment extends Fragment {
                             intent.putExtra("reminder", toDoItem.getReminderDate());
                             intent.putExtra("hasReminder", toDoItem.getHasReminder());
                             intent.putExtra("done", toDoItem.getDone());
-                            intent.putExtra("itemId", toDoItem.getItemId());
+                            intent.putExtra("itemId", itemId);
+                            System.out.println("id in page fragment: " + itemId);
                             startActivity(intent);
                         }
                     }
-                }, new RecyclerViewAdapter.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClicked(final ToDoItem toDoItem) {
-                // TO DO
-                return true;
-            }
-        });
-        mRecyclerView.setAdapter(mAdapter);
 
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+                        if (mToast != null) {
+                            mToast.cancel();
+                        }
+                        boolean hasReminder = toDoItem.getHasReminder();
+                        if (hasReminder) {
+                            String reminder = toDoItem.getReminderDate();
+                            mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.reminder_info) + " " + reminder, Toast.LENGTH_SHORT);
+                            mToast.show();
+                        } else {
+                            mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.no_reminder), Toast.LENGTH_SHORT);
+                            mToast.show();
+                        }
+                    }
+                });
+            }
+        };
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.to_do_list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+        mRecyclerView.setAdapter(mFirebaseAdapter);
+
+         }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mFirebaseAdapter.stopListening();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mFirebaseAdapter.startListening();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter.notifyDataSetChanged();
-        //  fragmentPagerAdapter.notifyDataSetChanged();
+        System.out.println("page called");
     }
+
+   /* @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (PassItemsChecked) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement interface");
+
+        }
+    }*/
 }

@@ -12,10 +12,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageSwitcher
+      <!--  <ImageSwitcher
             android:id="@+id/descriptImage"
             android:layout_width="match_parent"
             android:layout_height="160dp" />
+-->
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:id="@+id/tabImage"
+            android:scaleType="centerCrop"/>
 
         <com.astuetz.PagerSlidingTabStrip
             android:id="@+id/tabs"

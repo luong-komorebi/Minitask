@@ -1,6 +1,10 @@
 package luongvo.com.todolistminimal;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by luongvo on 19/07/2017.
@@ -8,21 +12,25 @@ import java.io.Serializable;
 
 public class ToDoItem implements Serializable {
     private String content;
-    private Boolean done;
+    private boolean done;
     private String reminderDate;
-    private Boolean hasReminder;
+    private boolean hasReminder;
     private String mItemId;
+    public Map<String, Boolean> toDoItemsMap = new HashMap<>();
 
     // Old constructor
-  /*  public ToDoItem(String content, Boolean done, String reminderDate, Boolean hasReminder) {
+   public ToDoItem(String content, boolean done, boolean hasReminder, String reminderDate) {
         this.content = content;
         this.done = done;
+       this.hasReminder = hasReminder;
         this.reminderDate = reminderDate;
-        this.hasReminder = hasReminder;
-    }*/
 
-    // New cionstrucotr with Firebase Id variable
-    public ToDoItem(String content, Boolean done, String reminderDate, Boolean hasReminder, String itemId) {
+    }
+
+  public ToDoItem() {}
+
+    // New constructor with Firebase Id variable
+    public ToDoItem(String content, boolean done, String reminderDate, boolean hasReminder, String itemId) {
         this.content = content;
         this.done = done;
         this.reminderDate = reminderDate;
@@ -31,7 +39,7 @@ public class ToDoItem implements Serializable {
     }
 
 
-    public Boolean getHasReminder() {
+    public boolean getHasReminder() {
         return hasReminder;
     }
 
@@ -43,7 +51,7 @@ public class ToDoItem implements Serializable {
         this.content = content;
     }
 
-    public Boolean getDone() {
+    public boolean getDone() {
         return done;
     }
 
@@ -62,17 +70,6 @@ public class ToDoItem implements Serializable {
     public void setItemId(String mItemId) {
         this.mItemId = mItemId;
     }
-
-    // this serves logging.
-//    @Override
-//    public String toString() {
-//        return "ToDoItem{" +
-//                "content='" + content + '\'' +
-//                ", done=" + done +
-//                ", reminderDate='" + reminderDate + '\'' +
-//                ", hasReminder=" + hasReminder +
-//                '}';
-//    }
 
     // compare object for remove from array list
     @Override
@@ -104,5 +101,16 @@ public class ToDoItem implements Serializable {
                 ", hasReminder=" + hasReminder +
                 ", mItemId='" + mItemId + '\'' +
                 '}';
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+       HashMap<String, Object> result = new HashMap<>();
+       result.put("content", content);
+       result.put("done", done);
+       result.put("hasReminder", hasReminder);
+       result.put("reminderDate", reminderDate);
+
+       return result;
     }
 }

@@ -23,10 +23,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
-import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 import luongvo.com.todolistminimal.Utils.UpdateFirebase;
-
-import static luongvo.com.todolistminimal.PageFragment.toDoItems;
 
 public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -47,9 +44,8 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
 
     ToDoItem toDoItem;
     MyDateTimeUtils dateTimeUtils;
-    UpdateDatabase updateDatabase;
 
-    // Declaring the class with Firebase method
+    // Declaring the class with Firebase methods
     UpdateFirebase updateFirebase;
 
     String content;
@@ -60,9 +56,9 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     String oldContent = "";
     String oldReminder = "";
     String oldItemId = "";
-    Boolean oldHasReminder;
-    Boolean oldDone;
-    Boolean existingData;
+    boolean oldHasReminder;
+    boolean oldDone;
+    boolean existingData;
 
     // New variable to store Firebase Id
     String mItemId;
@@ -72,7 +68,6 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
 
     // rowID after deleting from database
     private long oldRowId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +82,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
     private void initializeComponents() {
         getSupportActionBar().setTitle(R.string.add_todo_item);
         ButterKnife.bind(this);
-        updateDatabase = new UpdateDatabase();
+
         dateTimeUtils = new MyDateTimeUtils();
         date = "";
         time = "";
@@ -95,7 +90,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
         // Instantiate a new UpdateFirebase class
         updateFirebase = new UpdateFirebase();
 
-        // if switch is check then reveal data and time picker
+        // If switch is checked then reveal data and time picker
         reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -156,23 +151,24 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                 // get content input from user
                 content = materialTextInput.getText().toString();
                 // no error found, start adding to database
-                addItemToDatabase();
+
                 // this check is used for update/edit a todoItem case
-                // basically, after insert a new one, delete the old one, like trigger in database.
+                // If we are editing an existing item, run update method from UpdateFirebase class
                 if (existingData) {
-                    UpdateDatabase updateDatabaseInstance = new UpdateDatabase();
-                    // remove in database
-                    oldRowId = updateDatabaseInstance.removeInDatabase(oldContent, oldReminder, oldItemId, AddTodoItem.this);
-                    ToDoItem toDoItem = new ToDoItem(oldContent, oldDone, oldReminder, oldHasReminder, oldItemId);
-                    toDoItems.remove(toDoItem);
-                    // remove existing scheduled notification
-                    dateTimeUtils.cancelScheduledNotification(dateTimeUtils.getNotification(oldContent, AddTodoItem.this),
-                            AddTodoItem.this, (int) oldRowId);
 
-                    // Call the method to delete the item from Firebase
-                    updateFirebase.deleteItem(toDoItem);
+                    String newContent = materialTextInput.getText().toString();
+                    String newReminderDate = date + " " + time;
+                    boolean newHasReminder;
+                    if (newReminderDate.equals(" ")) {
+                        newHasReminder = false;
+                    } else {
+                        newHasReminder = true;
+                    }
+                    updateFirebase.updateItem(newContent, newHasReminder, newReminderDate, oldItemId);
+          } else {
+                    // If it is a new item, add it to the database
+                    addItemToDatabase();
                 }
-
 
                 // schedule a notification if date and time is set
                 if (!(date + " " + time).equals(" "))
@@ -266,20 +262,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
             toDoItem = new ToDoItem(content, false, reminderDate, true, mItemId);
 
         // Add the new item to Firebase Database
-        updateFirebase.addItem(toDoItem);
-
-        // After pushing the item to Firebase, get the Id to store in SQLite also
-        String key = toDoItem.getItemId();
-
-        // Create the new object with the Firebase Id
-        if (reminderDate.equals(" ")) // no reminder
-            toDoItem = new ToDoItem(content, false, reminderDate, false, key);
-        else  //  with reminder
-            toDoItem = new ToDoItem(content, false, reminderDate, true, key);
-
-        toDoItems.add(toDoItem);
-        newRowId = updateDatabase.addItemToDatabase(content, false, reminderDate, key, AddTodoItem.this);
-
+       updateFirebase.addItem(toDoItem);
 
     }
 
