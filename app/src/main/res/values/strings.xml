@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Minitask</string>
+    <string name="app_name">Minitask</string>
     <string name="about">About</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -23,7 +23,7 @@
     <string name="app_version">Version 2.0</string>
     <string name="author">Author: Lorenzo Redaelli</string>
     <string name="initial_idea">From the idea and initial development of: </string>
-    <string name="original_author">Luong Tran Thanh Vo</string>
+    <string name="original_author" translatable="false">Luong Tran Thanh Vo</string>
     <string name="contact_me">You can contact us at</string>
     <string name="support_me">Support us at</string>
     <string name="my_email" translatable="false">thanh.luong.for.fun@gmail.com</string>
@@ -42,13 +42,14 @@
     <string name="cancel">Cancel</string>
     <string name="delete_all_message">Are you sure you want to delete all the selected tasks?</string>
     <string name="deleted_all_task">Selected tasks deleted</string>
+    <string name="no_items_checked">No items have been checked!</string>
 
     <string name="click_item">Click an item</string>
 
-    <string name="facebook_app_id">298382557233568</string>
-    <string name="fb_login_protocol_scheme">fb298382557233568</string>
+    <string name="facebook_app_id" translatable="false">298382557233568</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb298382557233568</string>
 
-    <string name="sign_out">Sign Out</string>
+    <string name="sign_out" translatable="false">Sign Out</string>
 
     <string name="inbox" translatable="false">INBOX</string>
     <string name="today">TODAY</string>

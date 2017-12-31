@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String mUsername;
 
+    int passedInt;
+
     private int mCurrentPage;
 
     @BindView(R.id.view_pager)
@@ -208,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
         pager.setCurrentItem(mCurrentPage);
         changeColor(mCurrentPage);
+        pager.setOffscreenPageLimit(3);
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        descriptImage.setImageResource(IMAGES[0]); // first start render
+        descriptImage.setImageResource(IMAGES[mCurrentPage]); // first start render
     }
 
     private void changeColor(int position) {
@@ -276,31 +279,36 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.clean_all_done:
                 // clean all done tasks then recreate activity. Added a confirmation dialog. Redlor
-                AlertDialog alertDialog = new AlertDialog.Builder(this)
-                        .setIcon(android.R.drawable.ic_menu_delete)
-                        .setTitle(R.string.delete)
-                        .setMessage(R.string.delete_all_message)
-                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                System.out.println("passedInt " + passedInt);
+               // if (passedInt > 0) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(this)
+                            .setIcon(android.R.drawable.ic_menu_delete)
+                            .setTitle(R.string.delete)
+                            .setMessage(R.string.delete_all_message)
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                // Delete checked items from Firebase Database
-                                updateFirebase = new UpdateFirebase();
-                                updateFirebase.deleteChecked();
+                                    // Delete checked items from Firebase Database
+                                    updateFirebase = new UpdateFirebase();
+                                    updateFirebase.deleteChecked();
+                                    Toast.makeText(MainActivity.this, R.string.deleted_all_task, Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(MainActivity.this, R.string.deleted_all_task, Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (dialog != null) {
-                                    dialog.dismiss();
                                 }
-                            }
-                        }).create();
-                alertDialog.show();
-                doKeepDialog(alertDialog);
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (dialog != null) {
+                                        dialog.dismiss();
+                                    }
+                                }
+                            }).create();
+                    alertDialog.show();
+                    doKeepDialog(alertDialog);
+            //    }    else {
+              //      Toast.makeText(MainActivity.this, R.string.no_items_checked, Toast.LENGTH_SHORT).show();
+              //  }
                 return true;
             case R.id.sign_out_menu:
                 AuthUI.getInstance().signOut(this);
@@ -308,5 +316,16 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+  /*  @Override
+    public void passChecked(int isChecked) {
+        passedInt = isChecked;
+    }*/
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

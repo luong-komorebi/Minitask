@@ -42,6 +42,12 @@ public class PageFragment extends Fragment {
 
     private Toast mToast;
 
+    PassItemsChecked mCallback;
+    public int checkedItems;
+
+    public interface PassItemsChecked {
+        void passChecked(int isChecked);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,7 +118,6 @@ public class PageFragment extends Fragment {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
                         final String id = mFirebaseAdapter.getRef(position).getKey();
-                        System.out.println("id "+ id);
 
                         if (b) {
                             toDoItem.setDone(true);
@@ -120,6 +125,8 @@ public class PageFragment extends Fragment {
                             map.put("done", true);
                             mDatabaseReference.child(id).updateChildren(map);
                             viewHolder.checkDone.setOnCheckedChangeListener(null);
+                     //       checkedItems++;
+                       //     mCallback.passChecked(checkedItems);
                         }
                         else {
                             toDoItem.setDone(false);
@@ -127,6 +134,8 @@ public class PageFragment extends Fragment {
                             map.put("done", false);
                             mDatabaseReference.child(id).updateChildren(map);
                             viewHolder.checkDone.setOnCheckedChangeListener(null);
+                         //   checkedItems--;
+                         //   mCallback.passChecked(checkedItems);
                         }
                     }
                 });
@@ -207,7 +216,17 @@ public class PageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        System.out.println("page called");
     }
 
+   /* @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (PassItemsChecked) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement interface");
 
+        }
+    }*/
 }

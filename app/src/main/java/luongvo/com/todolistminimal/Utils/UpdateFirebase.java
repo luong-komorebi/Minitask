@@ -75,7 +75,6 @@ public class UpdateFirebase {
     // This method delete all the checked items from Firebase
     public void deleteChecked() {
         databaseReference.keepSynced(true);
-        activity = new MainActivity();
         Query query = databaseReference.orderByChild("done").equalTo(true);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -83,9 +82,7 @@ public class UpdateFirebase {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     dataSnapshot1.getRef().removeValue();
                 }
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
