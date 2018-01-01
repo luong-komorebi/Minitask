@@ -24,5 +24,11 @@ public class NotificationPublisher extends BroadcastReceiver {
         int id = intent.getIntExtra(NOTIFICATION_ID, 0);
         notificationManager.notify(id, notification);
 
+     //   Intent mainIntent = new Intent(context, MainActivity.class);
+     //   context.startActivity(mainIntent);
+
+
     }
-}
+
+
+    }

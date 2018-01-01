@@ -27,7 +27,12 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 
@@ -54,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int RC_SIGN_IN = 1;
 
     private String mUsername;
-
-    int passedInt;
 
     private int mCurrentPage;
 
@@ -115,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-     //   loadList(0);
         // If the layout on activity_main.xml in the folder layout-sw600dp is not null,
         // we are in Dual Pane mode and activate the fragment
         if (findViewById(R.id.details_linear_layout) != null) {
@@ -257,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("currentPage", mCurrentPage);
-        System.out.println("currentPage: " + mCurrentPage);
+
     }
 
     // initiates menu options
@@ -278,34 +280,55 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.clean_all_done:
-                // clean all done tasks then recreate activity. Added a confirmation dialog. Redlor
-                System.out.println("passedInt " + passedInt);
-               // if (passedInt > 0) {
-                    AlertDialog alertDialog = new AlertDialog.Builder(this)
-                            .setIcon(android.R.drawable.ic_menu_delete)
-                            .setTitle(R.string.delete)
-                            .setMessage(R.string.delete_all_message)
-                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                // clean all done tasks then recreate activity. Added a confirmation dialog.
 
-                                    // Delete checked items from Firebase Database
-                                    updateFirebase = new UpdateFirebase();
-                                    updateFirebase.deleteChecked();
-                                    Toast.makeText(MainActivity.this, R.string.deleted_all_task, Toast.LENGTH_SHORT).show();
+                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+              String uid = firebaseUser.getUid();
+                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
+                Query query = databaseReference.orderByChild("done").equalTo(true);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                       if(dataSnapshot.getValue() == null) {
+                           Toast.makeText(MainActivity.this, R.string.no_items_checked, Toast.LENGTH_SHORT).show();
+                       } else {
+                           AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+                                   .setIcon(android.R.drawable.ic_menu_delete)
+                                   .setTitle(R.string.delete)
+                                   .setMessage(R.string.delete_all_message)
+                                   .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (dialog != null) {
-                                        dialog.dismiss();
-                                    }
-                                }
-                            }).create();
-                    alertDialog.show();
-                    doKeepDialog(alertDialog);
+                                           // Delete checked items from Firebase Database
+                                           updateFirebase = new UpdateFirebase();
+                                           updateFirebase.deleteChecked();
+                                           Toast.makeText(MainActivity.this, R.string.deleted_all_task, Toast.LENGTH_SHORT).show();
+                                           finish();
+                                           startActivity(getIntent());
+                                           overridePendingTransition(0,0);
+                                       }
+                                   })
+                                   .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(DialogInterface dialog, int which) {
+                                           if (dialog != null) {
+                                               dialog.dismiss();
+                                           }
+                                       }
+                                   }).create();
+                           alertDialog.show();
+                           doKeepDialog(alertDialog);
+                       }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                // / if (passedInt > 0) {
+
             //    }    else {
               //      Toast.makeText(MainActivity.this, R.string.no_items_checked, Toast.LENGTH_SHORT).show();
               //  }
@@ -318,10 +341,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-  /*  @Override
-    public void passChecked(int isChecked) {
-        passedInt = isChecked;
-    }*/
 
     @Override
     public void onBackPressed() {
