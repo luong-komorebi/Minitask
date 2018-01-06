@@ -111,7 +111,8 @@ public class PageFragment extends Fragment {
                         }else {
                             viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                         }
-
+                        // render the clock icon if the item has a reminder
+                        // and add a animation for expired item
                         if (toDoItem.getHasReminder()) {
                             viewHolder.clockReminder.setVisibility(View.VISIBLE);
                             Calendar c = Calendar.getInstance();
