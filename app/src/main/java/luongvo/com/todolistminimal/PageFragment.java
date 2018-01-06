@@ -9,9 +9,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
@@ -23,27 +27,28 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 
+import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
 import luongvo.com.todolistminimal.Utils.SimpleDividerItemDecoration;
 import luongvo.com.todolistminimal.viewholder.FirebaseViewHolder;
 
 import static luongvo.com.todolistminimal.MainActivity.mTwoPane;
 
-
 public class PageFragment extends Fragment {
-
 
     DatabaseReference mDatabaseReference;
     private RecyclerView mRecyclerView;
     FirebaseRecyclerAdapter  mFirebaseAdapter;
 
     private View view;
-
     private Toast mToast;
 
     PassItemsChecked mCallback;
     public int checkedItems;
+    MyDateTimeUtils dateTimeUtils;
 
     public interface PassItemsChecked {
         void passChecked(int isChecked);
@@ -66,7 +71,6 @@ public class PageFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = firebaseUser.getUid();
@@ -94,7 +98,6 @@ public class PageFragment extends Fragment {
                         return new FirebaseViewHolder(view);
                     }
 
-
                     @Override
                     protected void onBindViewHolder(final FirebaseViewHolder viewHolder, final int position, final ToDoItem toDoItem) {
                         // set the content of the item
@@ -103,16 +106,31 @@ public class PageFragment extends Fragment {
                         viewHolder.checkDone.setChecked(toDoItem.getDone());
                         // check if checkbox is checked, then strike through the text
                         // this is for the first time UI render
-                if (viewHolder.checkDone.isChecked()) {
-                    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                }else {
-                    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                }
-                // render the clock icon if the item has a reminder
-                if (toDoItem.getHasReminder())
-                    viewHolder.clockReminder.setVisibility(View.VISIBLE);
-                else
-                    viewHolder.clockReminder.setVisibility(View.INVISIBLE);
+                        if (viewHolder.checkDone.isChecked()) {
+                            viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        }else {
+                            viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                        }
+
+                        if (toDoItem.getHasReminder()) {
+                            viewHolder.clockReminder.setVisibility(View.VISIBLE);
+                            Calendar c = Calendar.getInstance();
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String currentDateTime = sdf.format(c.getTime());
+                            Log.d("Debug",currentDateTime);
+                            Log.d("Debug",toDoItem.getReminderDate());
+                            if (currentDateTime.compareTo(toDoItem.getReminderDate()) > 0)
+                            {
+                                TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 6);
+                                animation.setDuration(400);
+                                animation.setInterpolator(new LinearInterpolator());
+                                animation.setRepeatCount(Animation.INFINITE);
+                                viewHolder.clockReminder.setAnimation(animation);
+                            }
+                        }
+                        else {
+                            viewHolder.clockReminder.setVisibility(View.INVISIBLE);
+                        }
 
                 viewHolder.checkDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override

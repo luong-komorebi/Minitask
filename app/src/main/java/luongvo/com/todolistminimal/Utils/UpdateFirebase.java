@@ -10,6 +10,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import luongvo.com.todolistminimal.MainActivity;
 import luongvo.com.todolistminimal.ToDoItem;
@@ -25,8 +26,6 @@ public class UpdateFirebase {
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = firebaseUser.getUid();
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
-    MainActivity activity;
-
 
     public UpdateFirebase(){}
 
