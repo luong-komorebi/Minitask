@@ -9,9 +9,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
@@ -135,10 +139,26 @@ public class WeekFragment extends Fragment {
                             viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                         }
                         // render the clock icon if the item has a reminder
-                        if (toDoItem.getHasReminder())
+                        // and add a animation for expired item
+                        if (toDoItem.getHasReminder()) {
                             viewHolder.clockReminder.setVisibility(View.VISIBLE);
-                        else
+                            Calendar c = Calendar.getInstance();
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String currentDateTime = sdf.format(c.getTime());
+                            Log.d("Debug",currentDateTime);
+                            Log.d("Debug",toDoItem.getReminderDate());
+                            if (currentDateTime.compareTo(toDoItem.getReminderDate()) > 0)
+                            {
+                                TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 6);
+                                animation.setDuration(400);
+                                animation.setInterpolator(new LinearInterpolator());
+                                animation.setRepeatCount(Animation.INFINITE);
+                                viewHolder.clockReminder.setAnimation(animation);
+                            }
+                        }
+                        else {
                             viewHolder.clockReminder.setVisibility(View.INVISIBLE);
+                        }
 
                         viewHolder.checkDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
