@@ -25,8 +25,8 @@ public class UpdateFirebase {
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = firebaseUser.getUid();
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
-    MainActivity activity;
 
+MainActivity mainActivity;
 
     public UpdateFirebase(){}
 

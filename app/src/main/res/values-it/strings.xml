@@ -10,7 +10,7 @@
     <string name="set_date">Scegli la data</string>
     <string name="set_time">Scegli l\'ora</string>
     <string name="reminder_set_at">Promemoria impostato a:</string>
-    <string name="reminder_info">Info sul promemoria</string>
+    <string name="reminder_info">Info sul promemoria: </string>
     <string name="not_found">Non trovato!</string>
     <string name="item_deleted">compito cancellato!</string>
     <string name="time_error">Per favore scegli l\'ora</string>
