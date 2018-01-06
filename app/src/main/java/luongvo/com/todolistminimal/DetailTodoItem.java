@@ -11,10 +11,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
-import luongvo.com.todolistminimal.Utils.UpdateDatabase;
 import luongvo.com.todolistminimal.Utils.UpdateFirebase;
-
-import static luongvo.com.todolistminimal.PageFragment.toDoItems;
 
 public class DetailTodoItem extends AppCompatActivity {
 
@@ -34,7 +31,7 @@ public class DetailTodoItem extends AppCompatActivity {
     String reminder;
     Boolean hasReminder;
     Boolean done;
-    UpdateDatabase updateDatabase; // util to do update stuffs in db
+
     MyDateTimeUtils dateTimeUtils; // util to do stuffs with notification
 
     String mItemId;
@@ -53,7 +50,7 @@ public class DetailTodoItem extends AppCompatActivity {
     private void initComponents() {
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(getString(R.string.detail));
-        updateDatabase = new UpdateDatabase();
+       // updateDatabase = new UpdateDatabase();
         dateTimeUtils = new MyDateTimeUtils();
 
         // Instantiate a new UpdateFirebase class
@@ -98,15 +95,12 @@ public class DetailTodoItem extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(DetailTodoItem.this, getString(R.string.item_deleted), Toast.LENGTH_SHORT).show();
                 ToDoItem toDoItem = new ToDoItem(content, done, reminder, hasReminder, mItemId);
-                toDoItems.remove(toDoItem);
-                // remove in database
-                oldRowId = updateDatabase.removeInDatabase(content, reminder, mItemId, DetailTodoItem.this);
-                // remove existing scheduled notification if existed
+
                 if (!reminder.equals(" "))
                     dateTimeUtils.cancelScheduledNotification(dateTimeUtils.getNotification(content, DetailTodoItem.this),
                             DetailTodoItem.this, (int) oldRowId);
 
-                // **New** Delete the item from Firebase Database
+                // Delete the item from Firebase Database
                 updateFirebase.deleteItem(toDoItem);
                 finish();
             }

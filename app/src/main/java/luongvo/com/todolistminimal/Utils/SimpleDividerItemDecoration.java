@@ -11,7 +11,7 @@ import luongvo.com.todolistminimal.R;
 
 /**
  * Created by Redlor on 25/11/2017.
- * This class implements a diveder for the items in the RecyclerView.
+ * This class implements a divider for the items in the RecyclerView.
  */
 
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
