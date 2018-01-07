@@ -21,6 +21,10 @@ Redlor: I am taking on the development of this app from November 2017. The aim i
 ## Contributing  
 PRs and discussions are welcomed. Translation is also appreciated.
 
+Contributors:
+  
+  https://github.com/danielblokus
+
 Translations:
 
   Italian: https://github.com/redlor
