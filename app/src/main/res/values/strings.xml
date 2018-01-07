@@ -2,6 +2,7 @@
     <string name="app_name">Minitask</string>
     <string name="about">About</string>
 
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="cleaning">Cleaning...</string>
     <string name="add_todo_item">Add task</string>

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="luongvo.com.todolistminimal.DetailTodoItem">
+    android:orientation="vertical">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -20,7 +18,7 @@
                 android:id="@+id/todoDetailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="4.5"
+                android:layout_weight="2"
                 android:background="#3f51b5"
                 android:gravity="center">
 
@@ -36,7 +34,7 @@
                     android:gravity="start|bottom"
                     android:lineSpacingExtra="10dp"
                     android:maxLines="5"
-                    android:text="SampleText"
+                    android:text="@string/click_item"
                     android:textColor="@android:color/white"
                     android:textSize="24sp" />
 
@@ -45,7 +43,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1.5"
+                android:layout_weight="2"
                 android:background="#757de8"
                 android:orientation="vertical"
                 android:padding="10dp">
@@ -86,6 +84,7 @@
                         style="@style/Base.TextAppearance.AppCompat.Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/not_found"
                         android:textColor="#ffff00"
                         android:textSize="20sp"
                         android:textStyle="italic" />

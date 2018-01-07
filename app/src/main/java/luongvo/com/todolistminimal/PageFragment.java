@@ -46,6 +46,7 @@ public class PageFragment extends Fragment {
     private View view;
     private Toast mToast;
 
+ expired_items
     PassItemsChecked mCallback;
     public int checkedItems;
     MyDateTimeUtils dateTimeUtils;
@@ -53,6 +54,8 @@ public class PageFragment extends Fragment {
     public interface PassItemsChecked {
         void passChecked(int isChecked);
     }
+
+ master
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class PageFragment extends Fragment {
 
                 mDatabaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
                 mDatabaseReference.keepSynced(true);
+
                 final Query query = FirebaseDatabase.getInstance()
                         .getReference("users")
                         .child(uid)
@@ -144,8 +148,7 @@ public class PageFragment extends Fragment {
                             map.put("done", true);
                             mDatabaseReference.child(id).updateChildren(map);
                             viewHolder.checkDone.setOnCheckedChangeListener(null);
-                     //       checkedItems++;
-                       //     mCallback.passChecked(checkedItems);
+
                         }
                         else {
                             toDoItem.setDone(false);
@@ -153,8 +156,7 @@ public class PageFragment extends Fragment {
                             map.put("done", false);
                             mDatabaseReference.child(id).updateChildren(map);
                             viewHolder.checkDone.setOnCheckedChangeListener(null);
-                         //   checkedItems--;
-                         //   mCallback.passChecked(checkedItems);
+
                         }
                     }
                 });
@@ -238,14 +240,4 @@ public class PageFragment extends Fragment {
         System.out.println("page called");
     }
 
-   /* @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mCallback = (PassItemsChecked) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement interface");
-
-        }
-    }*/
 }

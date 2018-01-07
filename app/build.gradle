@@ -46,6 +46,8 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.wdullaer:materialdatetimepicker:3.4.0'
 
+    implementation 'com.facebook.android:facebook-login:4.27.0'
+
     testCompile 'junit:junit:4.12'
     testCompile 'com.facebook.android:facebook-login:4.27.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'

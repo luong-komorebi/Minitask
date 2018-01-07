@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import luongvo.com.todolistminimal.MainActivity;
 import luongvo.com.todolistminimal.R;
 
 import static luongvo.com.todolistminimal.Utils.NotificationPublisher.NOTIFICATION;
@@ -104,6 +105,9 @@ public class MyDateTimeUtils {
 
     /* This is a helper function to build a notification object */
     public Notification getNotification(String content, Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(context.getString(R.string.task_to_be_done));
         builder.setContentText(content);
@@ -113,7 +117,9 @@ public class MyDateTimeUtils {
         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(content));
         builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                 R.mipmap.ic_launcher));
+        builder.setContentIntent(pendingIntent);
         builder.setShowWhen(false);
+        builder.setAutoCancel(true);
         return builder.build();
     }
 }
