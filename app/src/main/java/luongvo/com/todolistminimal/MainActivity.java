@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
         pager.setCurrentItem(mCurrentPage);
         changeColor(mCurrentPage);
-        pager.setOffscreenPageLimit(3);
+
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -278,6 +278,10 @@ public class MainActivity extends AppCompatActivity {
                 // start about activity
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.privacy_menu_item:
+                Intent privacyIntent = new Intent(this, PrivacyActivity.class);
+                startActivity(privacyIntent);
                 return true;
             case R.id.clean_all_done:
                 // clean all done tasks then recreate activity. Added a confirmation dialog.

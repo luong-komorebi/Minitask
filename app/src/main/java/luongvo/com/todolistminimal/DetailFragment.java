@@ -1,15 +1,19 @@
 package luongvo.com.todolistminimal;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -108,7 +112,48 @@ public class DetailFragment extends Fragment {
             deleteTodo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), getString(R.string.item_deleted), Toast.LENGTH_SHORT).show();
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                                .setIcon(android.R.drawable.ic_menu_delete)
+                                .setTitle(R.string.delete)
+                                .setMessage(R.string.delete_single_task_message)
+                                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+//                                        Toast.makeText(getActivity(), R.string.item_deleted, Toast.LENGTH_SHORT).show();
+
+                                        ToDoItem toDoItem = new ToDoItem(content, done, reminder, hasReminder, mItemId);
+                                        updateFirebase = new UpdateFirebase();
+                                        updateFirebase.deleteItem(toDoItem);
+
+                                        Activity a = getActivity();
+                                        if (a != null) {
+                                            //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+                                         //   getActivity().finish();
+
+                                            // This intent is for the dual pane mode, to refresh the UI
+                                            a.startActivity(new Intent(getContext(), MainActivity.class));
+                                            a.overridePendingTransition(0, 0);
+                                        } else {
+                                            getActivity().getSupportFragmentManager().isDestroyed();
+                                    }
+
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (dialog != null) {
+                                            dialog.dismiss();
+                                        }
+                                    }
+                                }).create();
+                        alertDialog.show();
+                        doKeepDialog(alertDialog);
+                    }
+
+
+                   /* Toast.makeText(getActivity(), getString(R.string.item_deleted), Toast.LENGTH_SHORT).show();
                     ToDoItem toDoItem = new ToDoItem(content, done, reminder, hasReminder, mItemId);
 
                     // remove existing scheduled notification if existed
@@ -124,8 +169,8 @@ public class DetailFragment extends Fragment {
 
                     // This intent is for the dual pane mode, to refresh the UI
                     getActivity().startActivity(new Intent(v.getContext(), MainActivity.class));
-                    getActivity().overridePendingTransition(0, 0);
-                }
+                    getActivity().overridePendingTransition(0, 0);*/
+
             });
 
             editTodo.setOnClickListener(new View.OnClickListener() {
@@ -156,5 +201,12 @@ public class DetailFragment extends Fragment {
 
     }
 
-
+    // Prevent dialog dismiss when orientation changes.
+    private static void doKeepDialog(Dialog dialog) {
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+    }
 }

@@ -18,7 +18,7 @@
                 android:id="@+id/todoDetailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="4.5"
+                android:layout_weight="2"
                 android:background="#3f51b5"
                 android:gravity="center">
 
@@ -43,16 +43,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1.5"
+                android:layout_weight="2"
                 android:background="#757de8"
                 android:orientation="vertical"
                 android:padding="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_weight="2"
                     android:gravity="center"
                     android:orientation="horizontal">
 

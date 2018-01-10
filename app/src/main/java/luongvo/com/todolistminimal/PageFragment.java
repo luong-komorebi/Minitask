@@ -46,7 +46,7 @@ public class PageFragment extends Fragment {
     private View view;
     private Toast mToast;
 
- expired_items
+
     PassItemsChecked mCallback;
     public int checkedItems;
     MyDateTimeUtils dateTimeUtils;
@@ -55,7 +55,7 @@ public class PageFragment extends Fragment {
         void passChecked(int isChecked);
     }
 
- master
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

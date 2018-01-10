@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme.Launcher">
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:configChanges="screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -42,7 +43,17 @@
                 android:value="luongvo.com.todolistminimal.MainActivity"/>
         </activity>
 
-        <activity android:name=".DetailActivity"/>
+        <activity android:name=".DetailActivity"
+                  android:configChanges="screenSize|orientation"/>
+
+        <activity android:name=".PrivacyActivity"
+                  android:parentActivityName=".MainActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="luongvo.com.todolistminimal.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>

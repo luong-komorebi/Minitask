@@ -5,9 +5,15 @@
     <item android:id="@+id/about_menu_item"
           android:title="@string/about"
           app:showAsAction="never"/>
+
+    <item android:id="@+id/privacy_menu_item"
+        android:title="@string/privacy_title"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/clean_all_done"
           android:title="@string/clean_all_done"
-          app:showAsAction="never"/>
+          app:showAsAction="always"/>
+
     <item
         android:id="@+id/sign_out_menu"
         android:title="@string/sign_out"

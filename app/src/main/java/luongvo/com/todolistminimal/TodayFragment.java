@@ -9,13 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
@@ -76,173 +72,10 @@ public class TodayFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         System.out.println("hint");
         if(isVisibleToUser) {
-expired_items
-
-            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-            final  String uid = firebaseUser.getUid();
-
-            mDatabaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
-            mDatabaseReference.keepSynced(true);
-
-            final Query query = FirebaseDatabase.getInstance()
-                    .getReference("users")
-                    .child(uid)
-                    .child("toDoItems")
-                    .limitToLast(50);
-
-            final FirebaseRecyclerOptions<ToDoItem> options =
-                    new FirebaseRecyclerOptions.Builder<ToDoItem>()
-                            .setQuery(query, ToDoItem.class)
-                            .build();
-            mFirebaseAdapter = new FirebaseRecyclerAdapter<ToDoItem, FirebaseViewHolder>(options
-            ) {
-                @Override
-                public FirebaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    View view = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.todo_item, parent, false);
-                    return new FirebaseViewHolder(view);
-                }
-
-                @Override
-                protected void onBindViewHolder(final FirebaseViewHolder viewHolder, final int position, final ToDoItem toDoItem) {
-                    boolean hasReminder = toDoItem.getHasReminder();
-                    Calendar calendar = Calendar.getInstance();
-                    today = calendar.getTime();
-                    SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    myDay = myFormat.format(today);
-                    String completeTime = toDoItem.getReminderDate();
-                    if (completeTime != null && !completeTime.equals(" ")) {
-                        String[] parts = completeTime.split(" ");
-                        day = parts[0];
-                    }
-
-                    if (hasReminder && myDay.equals(day)) {
-                        boolean todayB = true;
-                        System.out.println("today "+ todayB);
-                        System.out.println(myDay + " " + day);
-                        // set the content of the item
-                        viewHolder.content.setText(toDoItem.getContent());
-                        // set the checkbox status of the item
-                        viewHolder.checkDone.setChecked(toDoItem.getDone());
-                        // check if checkbox is checked, then strike through the text
-                        // this is for the first time UI render
-                        if (viewHolder.checkDone.isChecked()) {
-                            viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        } else {
-                            viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-
-                        }
-                        // render the clock icon if the item has a reminder
-                        // and add a animation for expired item
-                        if (toDoItem.getHasReminder()) {
-                            viewHolder.clockReminder.setVisibility(View.VISIBLE);
-                            Calendar c = Calendar.getInstance();
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String currentDateTime = sdf.format(c.getTime());
-                            Log.d("Debug",currentDateTime);
-                            Log.d("Debug",toDoItem.getReminderDate());
-                            if (currentDateTime.compareTo(toDoItem.getReminderDate()) > 0)
-                            {
-                                TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 6);
-                                animation.setDuration(400);
-                                animation.setInterpolator(new LinearInterpolator());
-                                animation.setRepeatCount(Animation.INFINITE);
-                                viewHolder.clockReminder.setAnimation(animation);
-                            }
-                        }
-                        else {
-                            viewHolder.clockReminder.setVisibility(View.INVISIBLE);
-                        }
-
-                        viewHolder.checkDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
-                                final String id = mFirebaseAdapter.getRef(position).getKey();
-
-                                if (b) {
-                                    toDoItem.setDone(true);
-                                    HashMap<String, Object> map = new HashMap<>();
-                                    map.put("done", true);
-                                    mDatabaseReference.child(id).updateChildren(map);
-                                    viewHolder.checkDone.setOnCheckedChangeListener(null);
-                                    //       checkedItems++;
-                                    //     mCallback.passChecked(checkedItems);
-                                }
-                                else {
-                                    toDoItem.setDone(false);
-                                    HashMap<String, Object> map = new HashMap<>();
-                                    map.put("done", false);
-                                    mDatabaseReference.child(id).updateChildren(map);
-                                    viewHolder.checkDone.setOnCheckedChangeListener(null);
-                                    //   checkedItems--;
-                                    //   mCallback.passChecked(checkedItems);
-                                }
-                            }
-                        });
-
-                        viewHolder.setOnClickListener(new FirebaseViewHolder.ClickListener() {
-                            @Override
-                            public void onItemClick(View view, int position) {
-                                final String itemId = mFirebaseAdapter.getRef(position).getKey();
-                                if (mTwoPane) {
-                                    DetailFragment newDetailFragment = new DetailFragment();
-                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("content", toDoItem.getContent());
-                                    bundle.putString("reminder", toDoItem.getReminderDate());
-                                    bundle.putBoolean("hasReminder", toDoItem.getHasReminder());
-                                    bundle.putBoolean("done", toDoItem.getDone());
-                                    bundle.putString("itemId", itemId);
-                                    System.out.println("id in page fragment: " + itemId);
-                                    newDetailFragment.setArguments(bundle);
-
-                                    fragmentManager.beginTransaction()
-                                            .replace(R.id.details_container, newDetailFragment)
-                                            .detach(newDetailFragment)
-                                            .attach(newDetailFragment)
-                                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                            .commit();
-                                } else {
-                                    Intent intent = new Intent(getContext(), DetailActivity.class);
-                                    intent.putExtra("content", toDoItem.getContent());
-                                    intent.putExtra("reminder", toDoItem.getReminderDate());
-                                    intent.putExtra("hasReminder", toDoItem.getHasReminder());
-                                    intent.putExtra("done", toDoItem.getDone());
-                                    intent.putExtra("itemId", itemId);
-                                    System.out.println("id in page fragment: " + itemId);
-                                    startActivity(intent);
-                                }
-                            }
-
-                            @Override
-                            public void onItemLongClick(View view, int position) {
-                                if (mToast != null) {
-                                    mToast.cancel();
-                                }
-                                String reminder = toDoItem.getReminderDate();
-                                mToast = Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.reminder_info) + " " + reminder, Toast.LENGTH_LONG);
-                                mToast.show();
-                            }
-                        });
-
-
-                    } else {
-                        viewHolder.LayoutHide();
-                    }
-
-                }
-            };
-
-            mRecyclerView = (RecyclerView) view.findViewById(R.id.to_do_list_today);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-            mRecyclerView.setAdapter(mFirebaseAdapter);
-            mFirebaseAdapter.startListening();
-
 
 
             firebaseLoadToday();
- master
+
         }
     }
 
