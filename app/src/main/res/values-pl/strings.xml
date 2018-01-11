@@ -37,4 +37,10 @@
     <string name="deleted_all_task">Usunięto zaznaczone zadania</string>
 
     <string name="click_item">Zaznaczono element</string>
+    <string name="delete_single_task_message">Are you sure you want to delete this task?</string>
+    <string name="author">Author: Lorenzo Redaelli</string>
+    <string name="initial_idea">From the idea and initial development of:</string>
+    <string name="no_items_checked">No items have been checked!</string>
+    <string name="today">TODAY</string>
+    <string name="next_7_days">NEXT 7 DAYS</string>
 </resources>

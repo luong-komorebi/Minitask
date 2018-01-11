@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal;
+package redlor.it.minitask;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
-import luongvo.com.todolistminimal.Utils.UpdateFirebase;
+import redlor.it.minitask.Utils.MyDateTimeUtils;
+import redlor.it.minitask.Utils.UpdateFirebase;
 
 /**
  * Created by Redlor on 26/11/2017.
@@ -54,7 +54,17 @@ public class DetailFragment extends Fragment {
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the fragment
      */
-    public DetailFragment() {}
+    public DetailFragment() {
+    }
+
+    // Prevent dialog dismiss when orientation changes.
+    private static void doKeepDialog(Dialog dialog) {
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+    }
 
     @Nullable
     @Override
@@ -81,7 +91,6 @@ public class DetailFragment extends Fragment {
                 hasReminder = bundle.getBoolean("hasReminder");
                 done = bundle.getBoolean("done");
                 mItemId = bundle.getString("itemId");
-                System.out.println("id in detail fragment: " + mItemId);
             }
         }
 
@@ -93,7 +102,6 @@ public class DetailFragment extends Fragment {
 
         return rootView;
     }
-
 
     private void assignComponents() {
         // update UI with the content taken from intent
@@ -112,45 +120,45 @@ public class DetailFragment extends Fragment {
             deleteTodo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                                .setIcon(android.R.drawable.ic_menu_delete)
-                                .setTitle(R.string.delete)
-                                .setMessage(R.string.delete_single_task_message)
-                                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                            .setIcon(android.R.drawable.ic_menu_delete)
+                            .setTitle(R.string.delete)
+                            .setMessage(R.string.delete_single_task_message)
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 //                                        Toast.makeText(getActivity(), R.string.item_deleted, Toast.LENGTH_SHORT).show();
 
-                                        ToDoItem toDoItem = new ToDoItem(content, done, reminder, hasReminder, mItemId);
-                                        updateFirebase = new UpdateFirebase();
-                                        updateFirebase.deleteItem(toDoItem);
+                                    ToDoItem toDoItem = new ToDoItem(content, done, reminder, hasReminder, mItemId);
+                                    updateFirebase = new UpdateFirebase();
+                                    updateFirebase.deleteItem(toDoItem);
 
-                                        Activity a = getActivity();
-                                        if (a != null) {
-                                            //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+                                    Activity a = getActivity();
+                                    if (a != null) {
+                                        //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
-                                         //   getActivity().finish();
+                                        //   getActivity().finish();
 
-                                            // This intent is for the dual pane mode, to refresh the UI
-                                            a.startActivity(new Intent(getContext(), MainActivity.class));
-                                            a.overridePendingTransition(0, 0);
-                                        } else {
-                                            getActivity().getSupportFragmentManager().isDestroyed();
+                                        // This intent is for the dual pane mode, to refresh the UI
+                                        a.startActivity(new Intent(getContext(), MainActivity.class));
+                                        a.overridePendingTransition(0, 0);
+                                    } else {
+                                        getActivity().getSupportFragmentManager().isDestroyed();
                                     }
 
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (dialog != null) {
+                                        dialog.dismiss();
                                     }
-                                })
-                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (dialog != null) {
-                                            dialog.dismiss();
-                                        }
-                                    }
-                                }).create();
-                        alertDialog.show();
-                        doKeepDialog(alertDialog);
-                    }
+                                }
+                            }).create();
+                    alertDialog.show();
+                    doKeepDialog(alertDialog);
+                }
 
 
                    /* Toast.makeText(getActivity(), getString(R.string.item_deleted), Toast.LENGTH_SHORT).show();
@@ -199,14 +207,5 @@ public class DetailFragment extends Fragment {
         currentState.putBoolean("currentDone", done);
         currentState.putString("currentItemId", mItemId);
 
-    }
-
-    // Prevent dialog dismiss when orientation changes.
-    private static void doKeepDialog(Dialog dialog) {
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        dialog.getWindow().setAttributes(lp);
     }
 }

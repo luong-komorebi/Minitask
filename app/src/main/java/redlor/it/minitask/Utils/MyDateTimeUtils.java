@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal.Utils;
+package redlor.it.minitask.Utils;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -13,15 +13,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import luongvo.com.todolistminimal.MainActivity;
-import luongvo.com.todolistminimal.R;
+import redlor.it.minitask.MainActivity;
+import redlor.it.minitask.R;
 
-import static luongvo.com.todolistminimal.Utils.NotificationPublisher.NOTIFICATION;
-import static luongvo.com.todolistminimal.Utils.NotificationPublisher.NOTIFICATION_ID;
+import static redlor.it.minitask.Utils.NotificationPublisher.NOTIFICATION;
+import static redlor.it.minitask.Utils.NotificationPublisher.NOTIFICATION_ID;
 
-/**
- * Created by luongvo on 22/07/2017.
- */
 
 // This class includes every helper function that relates to time
 public class MyDateTimeUtils {

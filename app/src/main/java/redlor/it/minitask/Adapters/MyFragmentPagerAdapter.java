@@ -1,14 +1,14 @@
-package luongvo.com.todolistminimal.Adapters;
+package redlor.it.minitask.Adapters;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import luongvo.com.todolistminimal.PageFragment;
-import luongvo.com.todolistminimal.R;
-import luongvo.com.todolistminimal.TodayFragment;
-import luongvo.com.todolistminimal.WeekFragment;
+import redlor.it.minitask.PageFragment;
+import redlor.it.minitask.R;
+import redlor.it.minitask.TodayFragment;
+import redlor.it.minitask.WeekFragment;
 
 /**
  * Created by luongvo on 18/07/2017.
@@ -31,7 +31,7 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
                 PageFragment pageFragment = new PageFragment();
                 return pageFragment;
             case 1:
-                TodayFragment todayFragment =  new TodayFragment();
+                TodayFragment todayFragment = new TodayFragment();
                 return todayFragment;
             case 2:
                 WeekFragment weekFragment = new WeekFragment();
@@ -49,12 +49,12 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
 
-        switch (position){
+        switch (position) {
             case 0:
                 return myActivity.getString(R.string.inbox);
             case 1:
                 return myActivity.getString(R.string.today);
-            case 2 :
+            case 2:
                 return myActivity.getString(R.string.next_7_days);
         }
         return null;

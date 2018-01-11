@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal;
+package redlor.it.minitask;
 
 import android.content.Intent;
 import android.os.Bundle;

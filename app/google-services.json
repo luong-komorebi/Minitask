@@ -15,10 +15,62 @@
       },
       "oauth_client": [
         {
+          "client_id": "422715163795-4hn0jdesuatmf2jmekmj375ksm948amd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "luongvo.com.todolistminimal",
+            "certificate_hash": "d2d65ecd6b1d5686e87b306e177100acce18b8f8"
+          }
+        },
+        {
           "client_id": "422715163795-7cdu344u2d4qum7ttfjopas4libbii2e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "luongvo.com.todolistminimal",
+            "certificate_hash": "f301baf1e430fab2db5020c9f88ef94fcff86c93"
+          }
+        },
+        {
+          "client_id": "422715163795-vbjr8p32l9qqdu2hhfpjkl58d3cu0f76.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyrrrGR640oc8X32GQ8pm8ZFEiumwFjbw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422715163795-vbjr8p32l9qqdu2hhfpjkl58d3cu0f76.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422715163795:android:4f5551902bb0e252",
+        "android_client_info": {
+          "package_name": "redlor.it.minitask"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422715163795-fkjv8fpkat634vo8b36m7ql7ljn33m93.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "redlor.it.minitask",
             "certificate_hash": "f301baf1e430fab2db5020c9f88ef94fcff86c93"
           }
         },

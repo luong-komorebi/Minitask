@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal.Utils;
+package redlor.it.minitask.Utils;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -11,8 +11,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-import luongvo.com.todolistminimal.MainActivity;
-import luongvo.com.todolistminimal.ToDoItem;
+import redlor.it.minitask.MainActivity;
+import redlor.it.minitask.ToDoItem;
 
 /**
  * Created by Redlor on 25/11/2017.
@@ -21,22 +21,19 @@ import luongvo.com.todolistminimal.ToDoItem;
 
 public class UpdateFirebase {
 
+    MainActivity mainActivity;
     // Get a reference to the Database
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = firebaseUser.getUid();
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
 
 
-
-MainActivity mainActivity;
-
-
-    public UpdateFirebase(){}
+    public UpdateFirebase() {
+    }
 
     // This method add a new item to Firebase Database
     public void addItem(ToDoItem toDoItem) {
         databaseReference.keepSynced(true);
-        System.out.println("user " + uid);
         String itemId = databaseReference.push().getKey();
         System.out.println(itemId);
         databaseReference.child(itemId).setValue(toDoItem);
@@ -59,7 +56,6 @@ MainActivity mainActivity;
         databaseReference.keepSynced(true);
 
         String id = toDoItem.getItemId();
-        System.out.println("the id is: " + id);
         databaseReference.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -86,6 +82,7 @@ MainActivity mainActivity;
                     dataSnapshot1.getRef().removeValue();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }

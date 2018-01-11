@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal.Utils;
+package redlor.it.minitask.Utils;
 
 /**
  * Created by luongvo on 26/07/2017.
@@ -25,9 +25,7 @@ public class NotificationPublisher extends BroadcastReceiver {
         notificationManager.notify(id, notification);
 
 
-
-
     }
 
 
-    }
+}

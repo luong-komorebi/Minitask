@@ -33,4 +33,5 @@
     <string name="click_item">Appuyez sur un item</string>
     <string name="today">AUJOURD\'HUI</string>
     <string name="next_7_days">SUR 7 JOURS</string>
+    <string name="delete_single_task_message">Are you sure you want to delete this task?</string>
 </resources>

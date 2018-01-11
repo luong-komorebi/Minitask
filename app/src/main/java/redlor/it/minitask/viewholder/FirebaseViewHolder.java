@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal.viewholder;
+package redlor.it.minitask.viewholder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,17 +10,17 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import luongvo.com.todolistminimal.R;
+import redlor.it.minitask.R;
+
 
 /**
  * Created by Hp on 08/12/2017.
  */
 
-public  class FirebaseViewHolder extends RecyclerView.ViewHolder {
+public class FirebaseViewHolder extends RecyclerView.ViewHolder {
 
-    private final LinearLayout layout;
     final LinearLayout.LayoutParams params;
-
+    private final LinearLayout layout;
     @BindView(R.id.taskList)
     public LinearLayout taskList;
     @BindView(R.id.todoContent)
@@ -32,12 +32,13 @@ public  class FirebaseViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.clockReminder)
     public
     ImageView clockReminder;
+    private FirebaseViewHolder.ClickListener mClickListener;
 
     public FirebaseViewHolder(final View view) {
         super(view);
         ButterKnife.bind(this, view);
-        layout =(LinearLayout) itemView.findViewById(R.id.taskList);
-        params =  new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        layout = (LinearLayout) itemView.findViewById(R.id.taskList);
+        params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -55,22 +56,22 @@ public  class FirebaseViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private FirebaseViewHolder.ClickListener mClickListener;
-
-    //Interface to send callbacks...
-    public interface ClickListener{
-        public void onItemClick(View view, int position);
-        public void onItemLongClick(View view, int position);
-    }
-
-    public void setOnClickListener(FirebaseViewHolder.ClickListener clickListener){
+    public void setOnClickListener(FirebaseViewHolder.ClickListener clickListener) {
         mClickListener = clickListener;
 
 
     }
-public void LayoutHide() {
+
+    public void LayoutHide() {
         params.height = 0;
         layout.setLayoutParams(params);
-}
+    }
+
+    //Interface to send callbacks...
+    public interface ClickListener {
+        public void onItemClick(View view, int position);
+
+        public void onItemLongClick(View view, int position);
+    }
 
 }

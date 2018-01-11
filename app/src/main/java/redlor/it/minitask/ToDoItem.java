@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal;
+package redlor.it.minitask;
 
 import com.google.firebase.database.Exclude;
 
@@ -11,23 +11,24 @@ import java.util.Map;
  */
 
 public class ToDoItem implements Serializable {
+    public Map<String, Boolean> toDoItemsMap = new HashMap<>();
     private String content;
     private boolean done;
     private String reminderDate;
     private boolean hasReminder;
     private String mItemId;
-    public Map<String, Boolean> toDoItemsMap = new HashMap<>();
 
     // Old constructor
-   public ToDoItem(String content, boolean done, boolean hasReminder, String reminderDate) {
+    public ToDoItem(String content, boolean done, boolean hasReminder, String reminderDate) {
         this.content = content;
         this.done = done;
-       this.hasReminder = hasReminder;
+        this.hasReminder = hasReminder;
         this.reminderDate = reminderDate;
 
     }
 
-  public ToDoItem() {}
+    public ToDoItem() {
+    }
 
     // New constructor with Firebase Id variable
     public ToDoItem(String content, boolean done, String reminderDate, boolean hasReminder, String itemId) {
@@ -105,12 +106,12 @@ public class ToDoItem implements Serializable {
 
     @Exclude
     public Map<String, Object> toMap() {
-       HashMap<String, Object> result = new HashMap<>();
-       result.put("content", content);
-       result.put("done", done);
-       result.put("hasReminder", hasReminder);
-       result.put("reminderDate", reminderDate);
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("content", content);
+        result.put("done", done);
+        result.put("hasReminder", hasReminder);
+        result.put("reminderDate", reminderDate);
 
-       return result;
+        return result;
     }
 }

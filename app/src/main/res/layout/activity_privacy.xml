@@ -36,7 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
-            android:gravity="center"
+            android:textAlignment="textStart"
+            android:gravity="start"
             android:text="@string/privacy_policy"
             android:textColor="@android:color/black"
             android:textSize="20sp" />

@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal;
+package redlor.it.minitask;
 
 import android.content.Intent;
 import android.graphics.Paint;
@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,111 +30,96 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
-import luongvo.com.todolistminimal.Utils.SimpleDividerItemDecoration;
-import luongvo.com.todolistminimal.viewholder.FirebaseViewHolder;
+import redlor.it.minitask.Utils.SimpleDividerItemDecoration;
+import redlor.it.minitask.viewholder.FirebaseViewHolder;
 
-import static luongvo.com.todolistminimal.MainActivity.mTwoPane;
+import static redlor.it.minitask.MainActivity.mTwoPane;
+
 
 public class PageFragment extends Fragment {
 
     DatabaseReference mDatabaseReference;
+    FirebaseRecyclerAdapter mFirebaseAdapter;
     private RecyclerView mRecyclerView;
-    FirebaseRecyclerAdapter  mFirebaseAdapter;
-
     private View view;
     private Toast mToast;
-
-
-    PassItemsChecked mCallback;
-    public int checkedItems;
-    MyDateTimeUtils dateTimeUtils;
-
-    public interface PassItemsChecked {
-        void passChecked(int isChecked);
-    }
-
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-            }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // inflate the tab view with these fragments
         view = inflater.inflate(R.layout.fragment_page, container, false);
-     return view;
+        return view;
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                String uid = firebaseUser.getUid();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = firebaseUser.getUid();
 
-                mDatabaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
-                mDatabaseReference.keepSynced(true);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
+        mDatabaseReference.keepSynced(true);
 
-                final Query query = FirebaseDatabase.getInstance()
-                        .getReference("users")
-                        .child(uid)
-                        .child("toDoItems")
-                        .limitToLast(50);
+        final Query query = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(uid)
+                .child("toDoItems")
+                .limitToLast(50);
 
-                FirebaseRecyclerOptions<ToDoItem> options =
-                        new FirebaseRecyclerOptions.Builder<ToDoItem>()
-                                .setQuery(query, ToDoItem.class)
-                                .build();
+        FirebaseRecyclerOptions<ToDoItem> options =
+                new FirebaseRecyclerOptions.Builder<ToDoItem>()
+                        .setQuery(query, ToDoItem.class)
+                        .build();
 
-                mFirebaseAdapter = new FirebaseRecyclerAdapter<ToDoItem, FirebaseViewHolder> (options
-                ) {
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<ToDoItem, FirebaseViewHolder>(options
+        ) {
 
-                    @Override
-                    public FirebaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        View view = LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.todo_item, parent, false);
-                        return new FirebaseViewHolder(view);
+            @Override
+            public FirebaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.todo_item, parent, false);
+                return new FirebaseViewHolder(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(final FirebaseViewHolder viewHolder, final int position, final ToDoItem toDoItem) {
+                // set the content of the item
+                viewHolder.content.setText(toDoItem.getContent());
+                // set the checkbox status of the item
+                viewHolder.checkDone.setChecked(toDoItem.getDone());
+                // check if checkbox is checked, then strike through the text
+                // this is for the first time UI render
+                if (viewHolder.checkDone.isChecked()) {
+                    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                // render the clock icon if the item has a reminder
+                // and add a animation for expired item
+                if (toDoItem.getHasReminder()) {
+                    viewHolder.clockReminder.setVisibility(View.VISIBLE);
+                    Calendar c = Calendar.getInstance();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String currentDateTime = sdf.format(c.getTime());
+                    if (currentDateTime.compareTo(toDoItem.getReminderDate()) > 0) {
+                        TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 6);
+                        animation.setDuration(400);
+                        animation.setInterpolator(new LinearInterpolator());
+                        animation.setRepeatCount(Animation.INFINITE);
+                        viewHolder.clockReminder.setAnimation(animation);
                     }
-
-                    @Override
-                    protected void onBindViewHolder(final FirebaseViewHolder viewHolder, final int position, final ToDoItem toDoItem) {
-                        // set the content of the item
-                        viewHolder.content.setText(toDoItem.getContent());
-                        // set the checkbox status of the item
-                        viewHolder.checkDone.setChecked(toDoItem.getDone());
-                        // check if checkbox is checked, then strike through the text
-                        // this is for the first time UI render
-                        if (viewHolder.checkDone.isChecked()) {
-                            viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        }else {
-                            viewHolder.content.setPaintFlags(viewHolder.content.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                        }
-                        // render the clock icon if the item has a reminder
-                        // and add a animation for expired item
-                        if (toDoItem.getHasReminder()) {
-                            viewHolder.clockReminder.setVisibility(View.VISIBLE);
-                            Calendar c = Calendar.getInstance();
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String currentDateTime = sdf.format(c.getTime());
-                            Log.d("Debug",currentDateTime);
-                            Log.d("Debug",toDoItem.getReminderDate());
-                            if (currentDateTime.compareTo(toDoItem.getReminderDate()) > 0)
-                            {
-                                TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 6);
-                                animation.setDuration(400);
-                                animation.setInterpolator(new LinearInterpolator());
-                                animation.setRepeatCount(Animation.INFINITE);
-                                viewHolder.clockReminder.setAnimation(animation);
-                            }
-                        }
-                        else {
-                            viewHolder.clockReminder.setVisibility(View.INVISIBLE);
-                        }
+                } else {
+                    viewHolder.clockReminder.setVisibility(View.INVISIBLE);
+                }
 
                 viewHolder.checkDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -149,8 +133,7 @@ public class PageFragment extends Fragment {
                             mDatabaseReference.child(id).updateChildren(map);
                             viewHolder.checkDone.setOnCheckedChangeListener(null);
 
-                        }
-                        else {
+                        } else {
                             toDoItem.setDone(false);
                             HashMap<String, Object> map = new HashMap<>();
                             map.put("done", false);
@@ -174,7 +157,6 @@ public class PageFragment extends Fragment {
                             bundle.putBoolean("hasReminder", toDoItem.getHasReminder());
                             bundle.putBoolean("done", toDoItem.getDone());
                             bundle.putString("itemId", itemId);
-                            System.out.println("id in page fragment: " + itemId);
                             newDetailFragment.setArguments(bundle);
 
                             fragmentManager.beginTransaction()
@@ -219,7 +201,7 @@ public class PageFragment extends Fragment {
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         mRecyclerView.setAdapter(mFirebaseAdapter);
 
-         }
+    }
 
     @Override
     public void onStop() {
@@ -237,7 +219,6 @@ public class PageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("page called");
     }
 
 }

@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal;
+package redlor.it.minitask;
 
 import android.content.Intent;
 import android.graphics.Paint;
@@ -29,27 +29,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-import luongvo.com.todolistminimal.Utils.SimpleDividerItemDecoration;
-import luongvo.com.todolistminimal.viewholder.FirebaseViewHolder;
+import redlor.it.minitask.Utils.SimpleDividerItemDecoration;
+import redlor.it.minitask.viewholder.FirebaseViewHolder;
 
-import static luongvo.com.todolistminimal.MainActivity.mTwoPane;
+import static redlor.it.minitask.MainActivity.mTwoPane;
 
-/**
- * Created by Hp on 07/12/2017.
- */
 
 public class WeekFragment extends Fragment {
 
     DatabaseReference mDatabaseReference;
-    private RecyclerView mRecyclerView;
-    FirebaseRecyclerAdapter  mFirebaseAdapter;
-
-    private View view;
-
-    private Toast mToast;
-
+    FirebaseRecyclerAdapter mFirebaseAdapter;
     Date itemDate;
-
+    private RecyclerView mRecyclerView;
+    private View view;
+    private Toast mToast;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +64,6 @@ public class WeekFragment extends Fragment {
         if (isVisibleToUser) {
 
 
-
             firebaseLoadWeek();
         }
     }
@@ -86,7 +78,7 @@ public class WeekFragment extends Fragment {
         super.onStop();
         try {
             mFirebaseAdapter.stopListening();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.getStackTrace();
         }
 
@@ -100,7 +92,7 @@ public class WeekFragment extends Fragment {
 
     private void firebaseLoadWeek() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        final  String uid = firebaseUser.getUid();
+        final String uid = firebaseUser.getUid();
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
         mDatabaseReference.keepSynced(true);
@@ -205,7 +197,6 @@ public class WeekFragment extends Fragment {
                                 bundle.putBoolean("hasReminder", toDoItem.getHasReminder());
                                 bundle.putBoolean("done", toDoItem.getDone());
                                 bundle.putString("itemId", itemId);
-                                System.out.println("id in page fragment: " + itemId);
                                 newDetailFragment.setArguments(bundle);
 
                                 fragmentManager.beginTransaction()
@@ -221,7 +212,6 @@ public class WeekFragment extends Fragment {
                                 intent.putExtra("hasReminder", toDoItem.getHasReminder());
                                 intent.putExtra("done", toDoItem.getDone());
                                 intent.putExtra("itemId", itemId);
-                                System.out.println("id in page fragment: " + itemId);
                                 startActivity(intent);
                             }
                         }

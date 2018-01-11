@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal;
+package redlor.it.minitask;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -38,30 +38,19 @@ import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import luongvo.com.todolistminimal.Adapters.MyFragmentPagerAdapter;
-import luongvo.com.todolistminimal.Utils.UpdateFirebase;
+import redlor.it.minitask.Adapters.MyFragmentPagerAdapter;
+import redlor.it.minitask.Utils.UpdateFirebase;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String ANONYMOUS = "anonymous";
+    public static final int RC_SIGN_IN = 1;
     // images for switcher
     private static final int[] IMAGES = {R.drawable.inbox, R.drawable.today, R.drawable.seven_day};
-    public static final String ANONYMOUS = "anonymous";
-
     // Declare a variable to check if in Dual Pane mode
     public static boolean mTwoPane;
-
     // Declare the class with Firebase methods
     UpdateFirebase updateFirebase;
-
-    // Firebase Authentication
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
-    public static final int RC_SIGN_IN = 1;
-
-    private String mUsername;
-
-    private int mCurrentPage;
-
     @BindView(R.id.view_pager)
     ViewPager pager;
     @BindView(R.id.tabs)
@@ -70,6 +59,20 @@ public class MainActivity extends AppCompatActivity {
     ImageView descriptImage;
     @BindView(R.id.actionButton)
     FloatingActionButton actionButton;
+    // Firebase Authentication
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private String mUsername;
+    private int mCurrentPage;
+
+    // Prevent dialog dismiss when orientation changes.
+    private static void doKeepDialog(Dialog dialog) {
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +85,9 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("restored page: " + mCurrentPage);
         }
 
-       try{
+        try {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -110,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                                     .setIsSmartLockEnabled(false)
                                     .setAvailableProviders(
                                             Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                                          new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
 
                                     .build(),
                             RC_SIGN_IN);
@@ -173,17 +176,8 @@ public class MainActivity extends AppCompatActivity {
         mUsername = ANONYMOUS;
     }
 
-    // Prevent dialog dismiss when orientation changes.
-    private static void doKeepDialog(Dialog dialog) {
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        dialog.getWindow().setAttributes(lp);
-    }
-
-    private void initializeComponents()  {
-   //     updateDatabase = new UpdateDatabase();
+    private void initializeComponents() {
+        //     updateDatabase = new UpdateDatabase();
         ButterKnife.bind(this);
 
 
@@ -286,44 +280,44 @@ public class MainActivity extends AppCompatActivity {
             case R.id.clean_all_done:
                 // clean all done tasks then recreate activity. Added a confirmation dialog.
 
-                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-              String uid = firebaseUser.getUid();
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = firebaseUser.getUid();
                 final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("toDoItems");
                 Query query = databaseReference.orderByChild("done").equalTo(true);
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                       if(dataSnapshot.getValue() == null) {
-                           Toast.makeText(MainActivity.this, R.string.no_items_checked, Toast.LENGTH_SHORT).show();
-                       } else {
-                           AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
-                                   .setIcon(android.R.drawable.ic_menu_delete)
-                                   .setTitle(R.string.delete)
-                                   .setMessage(R.string.delete_all_message)
-                                   .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(DialogInterface dialog, int which) {
+                        if (dataSnapshot.getValue() == null) {
+                            Toast.makeText(MainActivity.this, R.string.no_items_checked, Toast.LENGTH_SHORT).show();
+                        } else {
+                            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+                                    .setIcon(android.R.drawable.ic_menu_delete)
+                                    .setTitle(R.string.delete)
+                                    .setMessage(R.string.delete_all_message)
+                                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                                           // Delete checked items from Firebase Database
-                                           updateFirebase = new UpdateFirebase();
-                                           updateFirebase.deleteChecked();
-                                           Toast.makeText(MainActivity.this, R.string.deleted_all_task, Toast.LENGTH_SHORT).show();
-                                           finish();
-                                           startActivity(getIntent());
-                                           overridePendingTransition(0,0);
-                                       }
-                                   })
-                                   .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(DialogInterface dialog, int which) {
-                                           if (dialog != null) {
-                                               dialog.dismiss();
-                                           }
-                                       }
-                                   }).create();
-                           alertDialog.show();
-                           doKeepDialog(alertDialog);
-                       }
+                                            // Delete checked items from Firebase Database
+                                            updateFirebase = new UpdateFirebase();
+                                            updateFirebase.deleteChecked();
+                                            Toast.makeText(MainActivity.this, R.string.deleted_all_task, Toast.LENGTH_SHORT).show();
+                                            finish();
+                                            startActivity(getIntent());
+                                            overridePendingTransition(0, 0);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if (dialog != null) {
+                                                dialog.dismiss();
+                                            }
+                                        }
+                                    }).create();
+                            alertDialog.show();
+                            doKeepDialog(alertDialog);
+                        }
                     }
 
                     @Override
@@ -333,9 +327,9 @@ public class MainActivity extends AppCompatActivity {
                 });
                 // / if (passedInt > 0) {
 
-            //    }    else {
-              //      Toast.makeText(MainActivity.this, R.string.no_items_checked, Toast.LENGTH_SHORT).show();
-              //  }
+                //    }    else {
+                //      Toast.makeText(MainActivity.this, R.string.no_items_checked, Toast.LENGTH_SHORT).show();
+                //  }
                 return true;
             case R.id.sign_out_menu:
                 AuthUI.getInstance().signOut(this);

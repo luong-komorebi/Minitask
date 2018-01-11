@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal.Utils;
+package redlor.it.minitask.Utils;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,7 +7,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import luongvo.com.todolistminimal.R;
+import redlor.it.minitask.R;
+
 
 /**
  * Created by Redlor on 25/11/2017.

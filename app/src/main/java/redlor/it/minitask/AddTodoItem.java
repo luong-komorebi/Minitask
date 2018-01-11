@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal;
+package redlor.it.minitask;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,8 +22,8 @@ import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import luongvo.com.todolistminimal.Utils.MyDateTimeUtils;
-import luongvo.com.todolistminimal.Utils.UpdateFirebase;
+import redlor.it.minitask.Utils.MyDateTimeUtils;
+import redlor.it.minitask.Utils.UpdateFirebase;
 
 public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -165,7 +165,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
                         newHasReminder = true;
                     }
                     updateFirebase.updateItem(newContent, newHasReminder, newReminderDate, oldItemId);
-          } else {
+                } else {
                     // If it is a new item, add it to the database
                     addItemToDatabase();
                 }
@@ -262,7 +262,7 @@ public class AddTodoItem extends AppCompatActivity implements DatePickerDialog.O
             toDoItem = new ToDoItem(content, false, reminderDate, true, mItemId);
 
         // Add the new item to Firebase Database
-       updateFirebase.addItem(toDoItem);
+        updateFirebase.addItem(toDoItem);
 
     }
 
