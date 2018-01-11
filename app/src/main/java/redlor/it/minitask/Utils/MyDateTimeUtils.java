@@ -1,4 +1,4 @@
-package luongvo.com.todolistminimal.Utils;
+package redlor.it.minitask.Utils;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -13,14 +13,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import luongvo.com.todolistminimal.R;
+import redlor.it.minitask.MainActivity;
+import redlor.it.minitask.R;
 
-import static luongvo.com.todolistminimal.Utils.NotificationPublisher.NOTIFICATION;
-import static luongvo.com.todolistminimal.Utils.NotificationPublisher.NOTIFICATION_ID;
+import static redlor.it.minitask.Utils.NotificationPublisher.NOTIFICATION;
+import static redlor.it.minitask.Utils.NotificationPublisher.NOTIFICATION_ID;
 
-/**
- * Created by luongvo on 22/07/2017.
- */
 
 // This class includes every helper function that relates to time
 public class MyDateTimeUtils {
@@ -39,8 +37,7 @@ public class MyDateTimeUtils {
         if (date.equals("")) {
             Calendar calendar = Calendar.getInstance();
             return dateFormatter.format(calendar.getTime());
-        }
-        else return date;
+        } else return date;
     }
 
     /*This returns a date string with passed-in integer year, months, dayofmonth.*/
@@ -53,7 +50,7 @@ public class MyDateTimeUtils {
     /*This returns a time string with passed-in integer year, months, dayofmonth.*/
     public String timeToString(int hourOfDay, int minute) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(0,0,0,hourOfDay,minute);
+        calendar.set(0, 0, 0, hourOfDay, minute);
         return timeFormatter.format(calendar.getTime());
     }
 
@@ -88,23 +85,26 @@ public class MyDateTimeUtils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, futureInMillis.getTime(), pendingIntent);
     }
 
     /* this cancel a future notification if item is deleted or editted */
     public void cancelScheduledNotification(Notification notification,
-                                     Context context, int notificationID) {
+                                            Context context, int notificationID) {
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);
         notificationIntent.putExtra(NOTIFICATION_ID, notificationID);
         notificationIntent.putExtra(NOTIFICATION, notification);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }
 
     /* This is a helper function to build a notification object */
     public Notification getNotification(String content, Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(context.getString(R.string.task_to_be_done));
         builder.setContentText(content);
@@ -114,7 +114,9 @@ public class MyDateTimeUtils {
         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(content));
         builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                 R.mipmap.ic_launcher));
+        builder.setContentIntent(pendingIntent);
         builder.setShowWhen(false);
+        builder.setAutoCancel(true);
         return builder.build();
     }
 }

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="luongvo.com.todolistminimal">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="redlor.it.minitask">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -10,7 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
-        <activity android:name=".MainActivity">
+
+
+        <activity android:name=".MainActivity"
+            android:configChanges="screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -23,16 +29,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="luongvo.com.todolistminimal.MainActivity"/>
-        </activity>
-        <activity
-            android:name=".DetailTodoItem"
-            android:parentActivityName=".MainActivity">
-
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="luongvo.com.todolistminimal.MainActivity"/>
+                android:value="redlor.it.minitask.MainActivity"/>
         </activity>
 
         <receiver android:name=".Utils.NotificationPublisher"/>
@@ -43,7 +40,19 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="luongvo.com.todolistminimal.MainActivity"/>
+                android:value="redlor.it.minitask.MainActivity"/>
+        </activity>
+
+        <activity android:name=".DetailActivity"
+                  android:configChanges="screenSize|orientation"/>
+
+        <activity android:name=".PrivacyActivity"
+                  android:parentActivityName=".MainActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="redlor.it.minitask.MainActivity"/>
         </activity>
     </application>
 

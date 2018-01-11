@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Minitask</string>
+    <string name="about">A propos</string>
+    <string name="cleaning">En cours de nettoyage...</string>
+    <string name="add_todo_item">Ajouter une tâche</string>
+    <string name="add_todo_item_hint">Insérer votre tâche ici</string>
+    <string name="empty_input">Ne laissez pas votre tâche vide</string>
+    <string name="reminder_or_not">Configurer un rappel pour moi</string>
+    <string name="set_date">Régler la date</string>
+    <string name="set_time">Régler l\'heure</string>
+    <string name="reminder_set_at">Rappel réglé à</string>
+    <string name="reminder_info">Info à propos du rappel:</string>
+    <string name="not_found">Non trouvé!</string>
+    <string name="item_deleted">Tâche supprimée!</string>
+    <string name="time_error">Spécifier une heure</string>
+    <string name="task_to_be_done">Tâche à faire</string>
+    <string name="detail">Détail</string>
+    <string name="clean_all_done">Effacer les tâches effectuées</string>
+    <string name="app_version">Version 2.0</string>
+    <string name="contact_me">Vous pouvez nous contacter sur</string>
+    <string name="support_me">Soutenez-nous sur</string>
+    <string name="delete_message">Êtes-vous sûr de vouloir supprimer la tâche?</string>
+    <string name="delete">Supprimer</string>
+    <string name="cancel">Annuler</string>
+    <string name="delete_all_message">Voulez-vous vraiment supprimer toutes les tâches selectionnées?</string>
+    <string name="no_reminder">Il n\'y a pas de rappel pour cette activité!</string>
+    <string name="time_error_purpose">Préciser une heure est recommandé afin de recevoir une notification</string>
+    <string name="author">Auteur: Lorenzo Redaelli</string>
+    <string name="initial_idea">Idée et développement initial de:</string>
+    <string name="deleted_all_task">Tâches sélectionnées suppriméees</string>
+    <string name="no_items_checked">Aucun item n\'a été coché</string>
+    <string name="click_item">Appuyez sur un item</string>
+    <string name="today">AUJOURD\'HUI</string>
+    <string name="next_7_days">SUR 7 JOURS</string>
+    <string name="delete_single_task_message">Are you sure you want to delete this task?</string>
+</resources>
